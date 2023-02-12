@@ -1,6 +1,7 @@
 package smetana
 
 import (
+	"log"
 	"strings"
 	"testing"
 )
@@ -35,4 +36,13 @@ func TestWriteShortTag(t *testing.T) {
 	builder.writeShortTag(tag, attrs)
 	result := builder.Buf.String()
 	assertEqual(t, "<div foo=\"bar\" hello=\"world\" />", result)
+}
+
+func TestCustomLogger(t *testing.T) {
+	var target strings.Builder
+	logger := log.New(&target, "", 0)
+	builder := Builder{strings.Builder{}, true, logger}
+	builder.logger.Print("Hello world")
+	result := strings.TrimSpace(target.String())
+	assertEqual(t, "Hello world", result)
 }
