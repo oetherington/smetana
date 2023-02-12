@@ -4,36 +4,36 @@ import "testing"
 
 func TestRenderMeta(t *testing.T) {
 	node := Meta("foo", "bar")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"foo\" content=\"bar\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"bar\" name=\"foo\" />", result)
 }
 
 func TestRenderKeywords(t *testing.T) {
 	node := Keywords("some,keywords")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"keywords\" content=\"some,keywords\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"some,keywords\" name=\"keywords\" />", result)
 }
 
 func TestRenderDescription(t *testing.T) {
 	node := Description("a description")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"description\" content=\"a description\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"a description\" name=\"description\" />", result)
 }
 
 func TestRenderAuthor(t *testing.T) {
 	node := Author("A. Developer")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"author\" content=\"A. Developer\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"A. Developer\" name=\"author\" />", result)
 }
 
 func TestRenderViewport(t *testing.T) {
 	node := Viewport("some-value")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"viewport\" content=\"some-value\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"some-value\" name=\"viewport\" />", result)
 }
 
 func TestRenderViewportDefault(t *testing.T) {
 	node := Viewport("")
-	result := Render(node)
-	assertEqual(t, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />", result)
+	result := RenderOpts(node, true)
+	assertEqual(t, "<meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\" />", result)
 }

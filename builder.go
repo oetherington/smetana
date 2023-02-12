@@ -1,18 +1,39 @@
 package smetana
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
 
 type Builder struct {
-	Buf strings.Builder
+	Buf                     strings.Builder
+	deterministicAttributes bool
+}
+
+func (builder *Builder) writeAttr(key string, value string) {
+	builder.Buf.WriteByte(' ')
+	builder.Buf.WriteString(key)
+	builder.Buf.WriteString("=\"")
+	builder.Buf.WriteString(value)
+	builder.Buf.WriteByte('"')
 }
 
 func (builder *Builder) writeAttrs(attrs Attrs) {
-	for key, value := range attrs {
-		builder.Buf.WriteByte(' ')
-		builder.Buf.WriteString(key)
-		builder.Buf.WriteString("=\"")
-		builder.Buf.WriteString(value)
-		builder.Buf.WriteByte('"')
+	if (builder.deterministicAttributes) {
+		keys := make([]string, 0, len(attrs))
+		for k := range attrs {
+			keys = append(keys, k)
+		}
+
+		sort.Strings(keys)
+
+		for _, key := range keys {
+			builder.writeAttr(key, attrs[key])
+		}
+	} else {
+		for key, value := range attrs {
+			builder.writeAttr(key, value)
+		}
 	}
 }
 
