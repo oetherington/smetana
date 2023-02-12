@@ -67,7 +67,11 @@ func Base(href string) DomNode {
 	}, Children{}}
 }
 
-func Script(value string) DomNode {
+func Script(src string) DomNode {
+	return DomNode{"script", Attrs{"src": src}, Children{}}
+}
+
+func InlineScript(value string) DomNode {
 	return DomNode{"script", Attrs{}, Children{Text(value)}}
 }
 
