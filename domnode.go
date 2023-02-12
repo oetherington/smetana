@@ -1,5 +1,7 @@
 package smetana
 
+import "fmt"
+
 type DomNode struct {
 	Tag      Tag
 	Attrs    Attrs
@@ -42,4 +44,33 @@ func Link(rel string, href string) DomNode {
 		"href": href,
 	}
 	return DomNode{"link", attrs, Children{}}
+}
+
+func Charset(value string) DomNode {
+	if len(value) < 1 {
+		value = "UTF-8"
+	}
+	return DomNode{"meta", Attrs{"charset": value}, Children{}}
+}
+
+func Refresh(value uint) DomNode {
+	return DomNode{"meta", Attrs{
+		"http-equiv": "refresh",
+		"content":    fmt.Sprintf("%d", value),
+	}, Children{}}
+}
+
+func Base(href string) DomNode {
+	return DomNode{"base", Attrs{
+		"href":   href,
+		"target": "_blank",
+	}, Children{}}
+}
+
+func Script(value string) DomNode {
+	return DomNode{"script", Attrs{}, Children{Text(value)}}
+}
+
+func Style(value string) DomNode {
+	return DomNode{"style", Attrs{}, Children{Text(value)}}
 }
