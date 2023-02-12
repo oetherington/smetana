@@ -10,11 +10,11 @@ type DomNode struct {
 
 func (node DomNode) ToHtml(builder *Builder) {
 	if len(node.Children) > 0 {
-		writeOpeningTag(builder, node.Tag, node.Attrs)
-		writeChildren(builder, node.Children)
-		writeClosingTag(builder, node.Tag)
+		builder.writeOpeningTag(node.Tag, node.Attrs)
+		builder.writeChildren(node.Children)
+		builder.writeClosingTag(node.Tag)
 	} else {
-		writeShortTag(builder, node.Tag, node.Attrs)
+		builder.writeShortTag(node.Tag, node.Attrs)
 	}
 }
 

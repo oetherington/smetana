@@ -5,7 +5,7 @@ type TextNode struct {
 }
 
 func (node TextNode) ToHtml(builder *Builder) {
-	builder.WriteString(node.Text)
+	builder.Buf.WriteString(node.Text)
 }
 
 func Text(text string) TextNode {

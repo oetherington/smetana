@@ -6,7 +6,7 @@ type MetaNode struct {
 }
 
 func (node MetaNode) ToHtml(builder *Builder) {
-	writeShortTag(builder, "meta", Attrs{
+	builder.writeShortTag("meta", Attrs{
 		"name":    node.Name,
 		"content": node.Content,
 	})

@@ -11,6 +11,6 @@ func TestUsingCustomLogger(t *testing.T) {
 	customLogger := log.New(&target, "", 0)
 	SetLogger(customLogger)
 	logger.Print("hello world")
-	result := target.String()
+	result := strings.TrimSpace(target.String())
 	assertEqual(t, "hello world", result)
 }

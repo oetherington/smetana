@@ -7,14 +7,14 @@ type HtmlNode struct {
 }
 
 func (node HtmlNode) ToHtml(builder *Builder) {
-	builder.WriteString("<!DOCTYPE html>\n")
-	writeOpeningTag(builder, "html", node.Attrs)
-	builder.WriteByte('\n')
+	builder.Buf.WriteString("<!DOCTYPE html>\n")
+	builder.writeOpeningTag("html", node.Attrs)
+	builder.Buf.WriteByte('\n')
 	node.Head.ToHtml(builder)
-	builder.WriteByte('\n')
+	builder.Buf.WriteByte('\n')
 	node.Body.ToHtml(builder)
-	builder.WriteByte('\n')
-	writeClosingTag(builder, "html")
+	builder.Buf.WriteByte('\n')
+	builder.writeClosingTag("html")
 }
 
 func Html(attrs Attrs, head any, body any) HtmlNode {
