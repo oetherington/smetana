@@ -13,6 +13,14 @@ func assert(t *testing.T, exp, got interface{}, equal bool) {
 	}
 }
 
+func assertEqual(t *testing.T, exp, got interface{}) {
+	assert(t, exp, got, true)
+}
+
+func assertNotEqual(t *testing.T, exp, got interface{}) {
+	assert(t, exp, got, false)
+}
+
 func TestWriteOpeningTag(t *testing.T) {
 	var builder Builder
 	tag := "div"
@@ -28,7 +36,7 @@ func TestWriteOpeningTag(t *testing.T) {
 	} else {
 		expected = "<div hello=\"world\" foo=\"bar\">"
 	}
-	assert(t, expected, result, true)
+	assertEqual(t, expected, result)
 }
 
 func TestWriteClosingTag(t *testing.T) {
@@ -36,7 +44,7 @@ func TestWriteClosingTag(t *testing.T) {
 	tag := "span"
 	writeClosingTag(&builder, tag)
 	result := builder.String()
-	assert(t, "</span>", result, true)
+	assertEqual(t, "</span>", result)
 }
 
 func TestWriteShortTag(t *testing.T) {
@@ -54,5 +62,5 @@ func TestWriteShortTag(t *testing.T) {
 	} else {
 		expected = "<div hello=\"world\" foo=\"bar\" />"
 	}
-	assert(t, expected, result, true)
+	assertEqual(t, expected, result)
 }
