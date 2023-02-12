@@ -1,6 +1,7 @@
 package smetana
 
 import (
+	"log"
 	"sort"
 	"strings"
 )
@@ -8,6 +9,7 @@ import (
 type Builder struct {
 	Buf                     strings.Builder
 	deterministicAttributes bool
+	logger                  *log.Logger
 }
 
 func (builder *Builder) writeAttr(key string, value string) {
@@ -19,7 +21,7 @@ func (builder *Builder) writeAttr(key string, value string) {
 }
 
 func (builder *Builder) writeAttrs(attrs Attrs) {
-	if (builder.deterministicAttributes) {
+	if builder.deterministicAttributes {
 		keys := make([]string, 0, len(attrs))
 		for k := range attrs {
 			keys = append(keys, k)

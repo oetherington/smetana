@@ -11,7 +11,7 @@ func TestWriteOpeningTag(t *testing.T) {
 		"foo":   "bar",
 		"hello": "world",
 	}
-	builder := Builder{strings.Builder{}, true}
+	builder := Builder{strings.Builder{}, true, nil}
 	builder.writeOpeningTag(tag, attrs)
 	result := builder.Buf.String()
 	assertEqual(t, "<div foo=\"bar\" hello=\"world\">", result)
@@ -19,7 +19,7 @@ func TestWriteOpeningTag(t *testing.T) {
 
 func TestWriteClosingTag(t *testing.T) {
 	tag := "span"
-	builder := Builder{strings.Builder{}, true}
+	builder := Builder{strings.Builder{}, true, nil}
 	builder.writeClosingTag(tag)
 	result := builder.Buf.String()
 	assertEqual(t, "</span>", result)
@@ -31,7 +31,7 @@ func TestWriteShortTag(t *testing.T) {
 		"foo":   "bar",
 		"hello": "world",
 	}
-	builder := Builder{strings.Builder{}, true}
+	builder := Builder{strings.Builder{}, true, nil}
 	builder.writeShortTag(tag, attrs)
 	result := builder.Buf.String()
 	assertEqual(t, "<div foo=\"bar\" hello=\"world\" />", result)
