@@ -34,6 +34,10 @@ func RenderOpts(node Node, deterministicAttrs bool, logger *log.Logger) string {
 	return builder.Buf.String()
 }
 
+func Id(id string) Attr {
+	return Attr{"id", id}
+}
+
 func mergeMaps[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 	for k, v := range src {
 		dst[k] = v
