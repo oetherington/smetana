@@ -59,8 +59,9 @@ type DomNodeTest struct {
 
 func TestRenderIndividualDomNodes(t *testing.T) {
 	testCases := []DomNodeTest{
+		{A(Text("foo")), "<a>foo</a>"},
 		{
-			A("/index.html", Text("Home")),
+			AHref("/index.html", Text("Home")),
 			"<a href=\"/index.html\">Home</a>",
 		},
 		{Abbr(Text("foo")), "<abbr>foo</abbr>"},
@@ -70,8 +71,9 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{Aside(Text("foo")), "<aside>foo</aside>"},
 		{Audio(Text("foo")), "<audio>foo</audio>"},
 		{B(Text("foo")), "<b>foo</b>"},
+		{Base(Text("foo")), "<base>foo</base>"},
 		{
-			Base("https://example.com/"),
+			BaseHref("https://example.com/"),
 			"<base href=\"https://example.com/\" target=\"_blank\" />",
 		},
 		{Bdi(Text("foo")), "<bdi>foo</bdi>"},
@@ -135,8 +137,9 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{Label(Text("foo")), "<label>foo</label>"},
 		{Legend(Text("foo")), "<legend>foo</legend>"},
 		{Li(Text("foo")), "<li>foo</li>"},
+		{Link(Text("foo")), "<link>foo</link>"},
 		{
-			Link("stylesheet", "/main.css"),
+			LinkHref("stylesheet", "/main.css"),
 			"<link href=\"/main.css\" rel=\"stylesheet\" />",
 		},
 		{Main(Text("foo")), "<main>foo</main>"},

@@ -71,7 +71,11 @@ func buildDomNode(tag Tag, args []any) DomNode {
 	return node
 }
 
-func A(href string, args ...any) DomNode {
+func A(args ...any) DomNode {
+	return buildDomNode("a", args)
+}
+
+func AHref(href string, args ...any) DomNode {
 	node := buildDomNode("a", args)
 	node.Attrs["href"] = href
 	return node
@@ -105,7 +109,11 @@ func B(args ...any) DomNode {
 	return buildDomNode("b", args)
 }
 
-func Base(href string) DomNode {
+func Base(args ...any) DomNode {
+	return buildDomNode("base", args)
+}
+
+func BaseHref(href string) DomNode {
 	return DomNode{"base", Attrs{
 		"href":   href,
 		"target": "_blank",
@@ -312,7 +320,11 @@ func Li(args ...any) DomNode {
 	return buildDomNode("li", args)
 }
 
-func Link(rel string, href string) DomNode {
+func Link(args ...any) DomNode {
+	return buildDomNode("link", args)
+}
+
+func LinkHref(rel string, href string) DomNode {
 	attrs := Attrs{
 		"rel":  rel,
 		"href": href,
@@ -503,8 +515,8 @@ func Time(args ...any) DomNode {
 	return buildDomNode("time", args)
 }
 
-func Title(title string) DomNode {
-	return DomNode{"title", Attrs{}, Children{Text(title)}, nil}
+func Title(args ...any) DomNode {
+	return buildDomNode("title", args)
 }
 
 func Tr(args ...any) DomNode {
