@@ -19,7 +19,7 @@ func main() {
 			s.Viewport(""),
 		},
 		s.Children{
-			s.Div(s.Attrs{"class": "hello"}, s.Children{
+			s.Div(s.Attrs{"class": s.Class("foo", "bar")}, s.Children{
 				s.Span(s.Attrs{}, s.Children{
 					s.Text("Hello world"),
 				}),
