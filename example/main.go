@@ -19,7 +19,7 @@ func main() {
 		),
 		s.Body(
 			s.Div(
-				s.Attrs{"class": s.Class("foo", "bar")},
+				s.Attrs{"class": s.ClassNames("foo", "bar")},
 				s.Span(s.Text("Hello world")),
 			),
 			s.Div(s.Text("foobar")),

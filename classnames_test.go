@@ -2,23 +2,23 @@ package smetana
 
 import "testing"
 
-func TestClassConcatsStrings(t *testing.T) {
-	result := Class("foo", "bar", "baz")
+func TestClassNamesConcatsStrings(t *testing.T) {
+	result := ClassNames("foo", "bar", "baz")
 	assertEqual(t, "foo bar baz", result)
 }
 
-func TestClassIgnoresEmptyStrings(t *testing.T) {
-	result := Class("foo", "", "bar", "")
+func TestClassNamesIgnoresEmptyStrings(t *testing.T) {
+	result := ClassNames("foo", "", "bar", "")
 	assertEqual(t, "foo bar", result)
 }
 
-func TestClassCanbeEmpty(t *testing.T) {
-	result := Class()
+func TestClassNamesCanbeEmpty(t *testing.T) {
+	result := ClassNames()
 	assertEqual(t, "", result)
 }
 
-func TestClassesCanBeConditional(t *testing.T) {
-	result := Class(Classes{
+func TestClassesNamesCanBeConditional(t *testing.T) {
+	result := ClassNames(Classes{
 		"a": true,
 		"b": false,
 		"c": 1 == 2,
@@ -28,7 +28,7 @@ func TestClassesCanBeConditional(t *testing.T) {
 }
 
 func TestCanMixConditionalAndUnconditionalClasses(t *testing.T) {
-	result := Class("foo", Classes{
+	result := ClassNames("foo", Classes{
 		"a": true,
 		"b": false,
 	}, "bar", Classes{

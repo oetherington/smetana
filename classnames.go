@@ -4,7 +4,7 @@ import "strings"
 
 type Classes map[string]bool
 
-func Class(args ...any) string {
+func ClassNames(args ...any) string {
 	classes := []string{}
 	for _, arg := range args {
 		switch item := arg.(type) {
