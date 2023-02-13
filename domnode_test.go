@@ -2,6 +2,36 @@ package smetana
 
 import "testing"
 
+func TestRenderDomNodeWithAttributes(t *testing.T) {
+	node := buildDomNode("div", []any{Attrs{"class": "foo"}})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div class=\"foo\" />", result)
+}
+
+func TestRenderDomNodeWithChildren(t *testing.T) {
+	node := buildDomNode("div", []any{Children{Text("bar")}})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div>bar</div>", result)
+}
+
+func TestRenderDomNodeWithSingleAttribute(t *testing.T) {
+	node := buildDomNode("div", []any{Attr{"foo", "bar"}})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div foo=\"bar\" />", result)
+}
+
+func TestRenderDomNodeWithSingleChild(t *testing.T) {
+	node := buildDomNode("div", []any{Text("bar")})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div>bar</div>", result)
+}
+
+func TestRenderDomNodeWithClasses(t *testing.T) {
+	node := buildDomNode("div", []any{Classes{"a": true}})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div class=\"a\" />", result)
+}
+
 func TestRenderDiv(t *testing.T) {
 	node := Div(Attrs{"class": "foo"}, Children{Text("bar")})
 	result := RenderOpts(node, true, nil)

@@ -19,11 +19,11 @@ func main() {
 			s.Viewport(""),
 		},
 		s.Children{
-			s.Div(s.Attrs{"class": s.Class("foo", "bar")}, s.Children{
-				s.Span(s.Attrs{}, s.Children{
-					s.Text("Hello world"),
-				}),
-			}),
+			s.Div(
+				s.Attrs{"class": s.Class("foo", "bar")},
+				s.Span(s.Text("Hello world")),
+			),
+			s.Div(s.Text("foobar")),
 		},
 	)
 	fmt.Println(s.Render(node))

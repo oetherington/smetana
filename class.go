@@ -9,7 +9,9 @@ func Class(args ...any) string {
 	for _, arg := range args {
 		switch item := arg.(type) {
 		case string:
-			classes = append(classes, item)
+			if len(item) > 0 {
+				classes = append(classes, item)
+			}
 		case Classes:
 			for key, value := range item {
 				if value {

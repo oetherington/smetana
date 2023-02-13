@@ -7,6 +7,11 @@ func TestClassConcatsStrings(t *testing.T) {
 	assertEqual(t, "foo bar baz", result)
 }
 
+func TestClassIgnoresEmptyStrings(t *testing.T) {
+	result := Class("foo", "", "bar", "")
+	assertEqual(t, "foo bar", result)
+}
+
 func TestClassCanbeEmpty(t *testing.T) {
 	result := Class()
 	assertEqual(t, "", result)
