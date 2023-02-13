@@ -48,7 +48,7 @@ func TestMergeMapsOverwritesDuplicates(t *testing.T) {
 	assertEqual(t, map[string]int{"baz": 3}, m2)
 }
 
-func TestId(t *testing.T) {
+func TestIdHelper(t *testing.T) {
 	result := Id("foo")
 	assertEqual(t, Attr{Key: "id", Value: "foo"}, result)
 }

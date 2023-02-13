@@ -2,8 +2,8 @@ package smetana
 
 import "testing"
 
-func TestClassNamesConcatsStrings(t *testing.T) {
-	result := ClassNames("foo", "bar", "baz")
+func TestClassNamesConcatsStringsAndClassNames(t *testing.T) {
+	result := ClassNames("foo", "bar", ClassName("baz"))
 	assertEqual(t, "foo bar baz", result)
 }
 

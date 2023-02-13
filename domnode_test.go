@@ -31,9 +31,15 @@ func TestRenderDomNodeWithSingleChild(t *testing.T) {
 }
 
 func TestRenderDomNodeWithClasses(t *testing.T) {
-	node := buildDomNode("div", []any{"foo"})
+	node := buildDomNode("div", []any{Classes{"foo": true, "bar": false}})
 	result := RenderOpts(node, true, nil)
-	assertEqual(t, "<div>foo</div>", result)
+	assertEqual(t, "<div class=\"foo\" />", result)
+}
+
+func TestRenderDomNodeWithClassName(t *testing.T) {
+	node := buildDomNode("div", []any{ClassName("foo")})
+	result := RenderOpts(node, true, nil)
+	assertEqual(t, "<div class=\"foo\" />", result)
 }
 
 func TestRenderDomNodeWithStrings(t *testing.T) {
