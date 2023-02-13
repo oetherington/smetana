@@ -8,8 +8,7 @@ import (
 
 func main() {
 	node := s.Html(
-		s.Attrs{},
-		s.Children{
+		s.Head(
 			s.Charset(""),
 			s.Title("My HTML Document"),
 			s.Link("stylesheet", "/styles/index.css"),
@@ -17,14 +16,14 @@ func main() {
 			s.Description("Smetana templates for Golang"),
 			s.Author("Ollie Etherington"),
 			s.Viewport(""),
-		},
-		s.Children{
+		),
+		s.Body(
 			s.Div(
 				s.Attrs{"class": s.Class("foo", "bar")},
 				s.Span(s.Text("Hello world")),
 			),
 			s.Div(s.Text("foobar")),
-		},
+		),
 	)
 	fmt.Println(s.Render(node))
 }
