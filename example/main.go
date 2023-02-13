@@ -7,7 +7,10 @@ import (
 
 func main() {
 	styles := s.NewStyleSheet()
-	container := styles.AddClass(s.CssProps{})
+	container := styles.AddClass(s.CssProps{
+		"background": "red",
+		"padding":    s.EM(2),
+	})
 
 	node := s.Html(
 		s.Head(
