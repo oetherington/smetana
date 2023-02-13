@@ -10,6 +10,12 @@ type DomNode struct {
 }
 
 func (node DomNode) ToHtml(builder *Builder) {
+	if node.errors != nil {
+		for _, err := range node.errors {
+			builder.logger.Println(err)
+		}
+	}
+
 	if len(node.Children) > 0 {
 		builder.writeOpeningTag(node.Tag, node.Attrs)
 		builder.writeChildren(node.Children)
@@ -35,6 +41,13 @@ func (node *DomNode) AssignChildren(children Children) {
 	}
 }
 
+func (node *DomNode) appendError(err error) {
+	if node.errors == nil {
+		node.errors = []error{}
+	}
+	node.errors = append(node.errors, err)
+}
+
 func buildDomNode(tag Tag, args []any) DomNode {
 	node := DomNode{tag, Attrs{}, Children{}, nil}
 	for _, arg := range args {
@@ -50,8 +63,7 @@ func buildDomNode(tag Tag, args []any) DomNode {
 		case Classes:
 			node.Attrs["class"] = Class(node.Attrs["class"], value)
 		default:
-			err := fmt.Errorf("Invalid DomNode argument: %v", arg)
-			node.errors = append(node.errors, err)
+			node.appendError(fmt.Errorf("Invalid DomNode argument: %v", arg))
 		}
 	}
 	return node

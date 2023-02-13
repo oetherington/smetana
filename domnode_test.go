@@ -1,6 +1,10 @@
 package smetana
 
-import "testing"
+import (
+	"log"
+	"strings"
+	"testing"
+)
 
 func TestRenderDomNodeWithAttributes(t *testing.T) {
 	node := buildDomNode("div", []any{Attrs{"class": "foo"}})
@@ -108,4 +112,14 @@ func TestRenderStyle(t *testing.T) {
 	node := Style("body{background:red}")
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<style>body{background:red}</style>", result)
+}
+
+func TestDomNodeReportsErrors(t *testing.T) {
+	node := buildDomNode("div", []any{3})
+	var target strings.Builder
+	logger := log.New(&target, "", 0)
+	result := RenderOpts(node, true, logger)
+	assertEqual(t, "<div />", result)
+	output := strings.TrimSpace(target.String())
+	assertEqual(t, "Invalid DomNode argument: 3", output)
 }
