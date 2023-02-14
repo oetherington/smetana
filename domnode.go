@@ -2,6 +2,11 @@ package smetana
 
 import "fmt"
 
+/*
+ * DomNode is a basic Node that renders into a particular HTML tag
+ * with optional attributes and/or children. Any errors that are
+ * generated are stored in `errors`.
+ */
 type DomNode struct {
 	Tag      Tag
 	Attrs    Attrs
@@ -9,6 +14,7 @@ type DomNode struct {
 	errors   []error
 }
 
+// Convert a DomNode to HTML
 func (node DomNode) ToHtml(builder *Builder) {
 	if node.errors != nil {
 		for _, err := range node.errors {
@@ -25,6 +31,12 @@ func (node DomNode) ToHtml(builder *Builder) {
 	}
 }
 
+/*
+ * Assign new attributes to a DomNode. These values are merged
+ * together with any existing attributes. If a value exists in
+ * both the old attributes map and the new attributes map then
+ * the new value is used.
+ */
 func (node *DomNode) AssignAttrs(attrs Attrs) {
 	if len(node.Attrs) < 1 {
 		node.Attrs = attrs
@@ -33,6 +45,7 @@ func (node *DomNode) AssignAttrs(attrs Attrs) {
 	}
 }
 
+// Append more children to the end of a DomNode
 func (node *DomNode) AssignChildren(children Children) {
 	if len(node.Children) < 1 {
 		node.Children = children
@@ -41,6 +54,7 @@ func (node *DomNode) AssignChildren(children Children) {
 	}
 }
 
+// Record a compilation error for a DomNode
 func (node *DomNode) appendError(err error) {
 	if node.errors == nil {
 		node.errors = []error{}
@@ -48,7 +62,7 @@ func (node *DomNode) appendError(err error) {
 	node.errors = append(node.errors, err)
 }
 
-func buildDomNode(tag Tag, args []any) DomNode {
+func NewDomNode(tag Tag, args []any) DomNode {
 	node := DomNode{tag, Attrs{}, Children{}, nil}
 	for _, arg := range args {
 		switch value := arg.(type) {
@@ -72,45 +86,45 @@ func buildDomNode(tag Tag, args []any) DomNode {
 }
 
 func A(args ...any) DomNode {
-	return buildDomNode("a", args)
+	return NewDomNode("a", args)
 }
 
 func AHref(href string, args ...any) DomNode {
-	node := buildDomNode("a", args)
+	node := NewDomNode("a", args)
 	node.Attrs["href"] = href
 	return node
 }
 
 func Abbr(args ...any) DomNode {
-	return buildDomNode("abbr", args)
+	return NewDomNode("abbr", args)
 }
 
 func Address(args ...any) DomNode {
-	return buildDomNode("address", args)
+	return NewDomNode("address", args)
 }
 
 func Area(args ...any) DomNode {
-	return buildDomNode("area", args)
+	return NewDomNode("area", args)
 }
 
 func Article(args ...any) DomNode {
-	return buildDomNode("article", args)
+	return NewDomNode("article", args)
 }
 
 func Aside(args ...any) DomNode {
-	return buildDomNode("aside", args)
+	return NewDomNode("aside", args)
 }
 
 func Audio(args ...any) DomNode {
-	return buildDomNode("audio", args)
+	return NewDomNode("audio", args)
 }
 
 func B(args ...any) DomNode {
-	return buildDomNode("b", args)
+	return NewDomNode("b", args)
 }
 
 func Base(args ...any) DomNode {
-	return buildDomNode("base", args)
+	return NewDomNode("base", args)
 }
 
 func BaseHref(href string) DomNode {
@@ -121,35 +135,35 @@ func BaseHref(href string) DomNode {
 }
 
 func Bdi(args ...any) DomNode {
-	return buildDomNode("bdi", args)
+	return NewDomNode("bdi", args)
 }
 
 func Bdo(args ...any) DomNode {
-	return buildDomNode("bdo", args)
+	return NewDomNode("bdo", args)
 }
 
 func Blockquote(args ...any) DomNode {
-	return buildDomNode("blockquote", args)
+	return NewDomNode("blockquote", args)
 }
 
 func Body(args ...any) DomNode {
-	return buildDomNode("body", args)
+	return NewDomNode("body", args)
 }
 
 func Br(args ...any) DomNode {
-	return buildDomNode("br", args)
+	return NewDomNode("br", args)
 }
 
 func Button(args ...any) DomNode {
-	return buildDomNode("button", args)
+	return NewDomNode("button", args)
 }
 
 func Canvas(args ...any) DomNode {
-	return buildDomNode("canvas", args)
+	return NewDomNode("canvas", args)
 }
 
 func Caption(args ...any) DomNode {
-	return buildDomNode("caption", args)
+	return NewDomNode("caption", args)
 }
 
 func Charset(value string) DomNode {
@@ -160,168 +174,168 @@ func Charset(value string) DomNode {
 }
 
 func Cite(args ...any) DomNode {
-	return buildDomNode("cite", args)
+	return NewDomNode("cite", args)
 }
 
 func Code(args ...any) DomNode {
-	return buildDomNode("code", args)
+	return NewDomNode("code", args)
 }
 
 func Col(args ...any) DomNode {
-	return buildDomNode("col", args)
+	return NewDomNode("col", args)
 }
 
 func Colgroup(args ...any) DomNode {
-	return buildDomNode("colgroup", args)
+	return NewDomNode("colgroup", args)
 }
 
 func Data(args ...any) DomNode {
-	return buildDomNode("data", args)
+	return NewDomNode("data", args)
 }
 
 func Datalist(args ...any) DomNode {
-	return buildDomNode("datalist", args)
+	return NewDomNode("datalist", args)
 }
 
 func Dd(args ...any) DomNode {
-	return buildDomNode("dd", args)
+	return NewDomNode("dd", args)
 }
 
 func Del(args ...any) DomNode {
-	return buildDomNode("del", args)
+	return NewDomNode("del", args)
 }
 
 func Details(args ...any) DomNode {
-	return buildDomNode("details", args)
+	return NewDomNode("details", args)
 }
 
 func Dfn(args ...any) DomNode {
-	return buildDomNode("dfn", args)
+	return NewDomNode("dfn", args)
 }
 
 func Dialog(args ...any) DomNode {
-	return buildDomNode("dialog", args)
+	return NewDomNode("dialog", args)
 }
 
 func Div(args ...any) DomNode {
-	return buildDomNode("div", args)
+	return NewDomNode("div", args)
 }
 
 func Dl(args ...any) DomNode {
-	return buildDomNode("dl", args)
+	return NewDomNode("dl", args)
 }
 
 func Dt(args ...any) DomNode {
-	return buildDomNode("dt", args)
+	return NewDomNode("dt", args)
 }
 
 func Em(args ...any) DomNode {
-	return buildDomNode("em", args)
+	return NewDomNode("em", args)
 }
 
 func Embed(args ...any) DomNode {
-	return buildDomNode("embed", args)
+	return NewDomNode("embed", args)
 }
 
 func Fieldset(args ...any) DomNode {
-	return buildDomNode("fieldset", args)
+	return NewDomNode("fieldset", args)
 }
 
 func Figcaption(args ...any) DomNode {
-	return buildDomNode("figcaption", args)
+	return NewDomNode("figcaption", args)
 }
 
 func Figure(args ...any) DomNode {
-	return buildDomNode("figure", args)
+	return NewDomNode("figure", args)
 }
 
 func Footer(args ...any) DomNode {
-	return buildDomNode("footer", args)
+	return NewDomNode("footer", args)
 }
 
 func Form(args ...any) DomNode {
-	return buildDomNode("form", args)
+	return NewDomNode("form", args)
 }
 
 func H(level int, args ...any) DomNode {
 	tag := fmt.Sprintf("h%d", level)
-	return buildDomNode(tag, args)
+	return NewDomNode(tag, args)
 }
 
 func H1(args ...any) DomNode {
-	return buildDomNode("h1", args)
+	return NewDomNode("h1", args)
 }
 
 func H2(args ...any) DomNode {
-	return buildDomNode("h2", args)
+	return NewDomNode("h2", args)
 }
 
 func H3(args ...any) DomNode {
-	return buildDomNode("h3", args)
+	return NewDomNode("h3", args)
 }
 
 func H4(args ...any) DomNode {
-	return buildDomNode("h4", args)
+	return NewDomNode("h4", args)
 }
 
 func H5(args ...any) DomNode {
-	return buildDomNode("h5", args)
+	return NewDomNode("h5", args)
 }
 
 func H6(args ...any) DomNode {
-	return buildDomNode("h6", args)
+	return NewDomNode("h6", args)
 }
 
 func Head(args ...any) DomNode {
-	return buildDomNode("head", args)
+	return NewDomNode("head", args)
 }
 
 func Header(args ...any) DomNode {
-	return buildDomNode("header", args)
+	return NewDomNode("header", args)
 }
 
 func Hr(args ...any) DomNode {
-	return buildDomNode("hr", args)
+	return NewDomNode("hr", args)
 }
 
 func I(args ...any) DomNode {
-	return buildDomNode("i", args)
+	return NewDomNode("i", args)
 }
 
 func Iframe(args ...any) DomNode {
-	return buildDomNode("iframe", args)
+	return NewDomNode("iframe", args)
 }
 
 func Img(args ...any) DomNode {
-	return buildDomNode("img", args)
+	return NewDomNode("img", args)
 }
 
 func Input(args ...any) DomNode {
-	return buildDomNode("input", args)
+	return NewDomNode("input", args)
 }
 
 func Ins(args ...any) DomNode {
-	return buildDomNode("ins", args)
+	return NewDomNode("ins", args)
 }
 
 func Kbd(args ...any) DomNode {
-	return buildDomNode("kbd", args)
+	return NewDomNode("kbd", args)
 }
 
 func Label(args ...any) DomNode {
-	return buildDomNode("label", args)
+	return NewDomNode("label", args)
 }
 
 func Legend(args ...any) DomNode {
-	return buildDomNode("legend", args)
+	return NewDomNode("legend", args)
 }
 
 func Li(args ...any) DomNode {
-	return buildDomNode("li", args)
+	return NewDomNode("li", args)
 }
 
 func Link(args ...any) DomNode {
-	return buildDomNode("link", args)
+	return NewDomNode("link", args)
 }
 
 func LinkHref(rel string, href string) DomNode {
@@ -333,71 +347,71 @@ func LinkHref(rel string, href string) DomNode {
 }
 
 func Main(args ...any) DomNode {
-	return buildDomNode("main", args)
+	return NewDomNode("main", args)
 }
 
 func Map(args ...any) DomNode {
-	return buildDomNode("map", args)
+	return NewDomNode("map", args)
 }
 
 func Mark(args ...any) DomNode {
-	return buildDomNode("mark", args)
+	return NewDomNode("mark", args)
 }
 
 func Meter(args ...any) DomNode {
-	return buildDomNode("meter", args)
+	return NewDomNode("meter", args)
 }
 
 func Nav(args ...any) DomNode {
-	return buildDomNode("nav", args)
+	return NewDomNode("nav", args)
 }
 
 func Noscript(args ...any) DomNode {
-	return buildDomNode("noscript", args)
+	return NewDomNode("noscript", args)
 }
 
 func Object(args ...any) DomNode {
-	return buildDomNode("object", args)
+	return NewDomNode("object", args)
 }
 
 func Ol(args ...any) DomNode {
-	return buildDomNode("ol", args)
+	return NewDomNode("ol", args)
 }
 
 func Optgroup(args ...any) DomNode {
-	return buildDomNode("optgroup", args)
+	return NewDomNode("optgroup", args)
 }
 
 func Option(args ...any) DomNode {
-	return buildDomNode("option", args)
+	return NewDomNode("option", args)
 }
 
 func Output(args ...any) DomNode {
-	return buildDomNode("output", args)
+	return NewDomNode("output", args)
 }
 
 func P(args ...any) DomNode {
-	return buildDomNode("p", args)
+	return NewDomNode("p", args)
 }
 
 func Param(args ...any) DomNode {
-	return buildDomNode("param", args)
+	return NewDomNode("param", args)
 }
 
 func Picture(args ...any) DomNode {
-	return buildDomNode("picture", args)
+	return NewDomNode("picture", args)
 }
 
 func Pre(args ...any) DomNode {
-	return buildDomNode("pre", args)
+	return NewDomNode("pre", args)
 }
 
 func Progress(args ...any) DomNode {
-	return buildDomNode("progress", args)
+	return NewDomNode("progress", args)
 }
 
 func Q(args ...any) DomNode {
-	return buildDomNode("q", args)
+	return NewDomNode("q", args)
 }
 
 func Refresh(value uint) DomNode {
@@ -408,27 +422,27 @@ func Refresh(value uint) DomNode {
 }
 
 func Rp(args ...any) DomNode {
-	return buildDomNode("rp", args)
+	return NewDomNode("rp", args)
 }
 
 func Rt(args ...any) DomNode {
-	return buildDomNode("rt", args)
+	return NewDomNode("rt", args)
 }
 
 func Ruby(args ...any) DomNode {
-	return buildDomNode("ruby", args)
+	return NewDomNode("ruby", args)
 }
 
 func S(args ...any) DomNode {
-	return buildDomNode("s", args)
+	return NewDomNode("s", args)
 }
 
 func Samp(args ...any) DomNode {
-	return buildDomNode("samp", args)
+	return NewDomNode("samp", args)
 }
 
 func Script(args ...any) DomNode {
-	return buildDomNode("script", args)
+	return NewDomNode("script", args)
 }
 
 func ScriptSrc(src string) DomNode {
@@ -436,113 +450,113 @@ func ScriptSrc(src string) DomNode {
 }
 
 func Section(args ...any) DomNode {
-	return buildDomNode("section", args)
+	return NewDomNode("section", args)
 }
 
 func Select(args ...any) DomNode {
-	return buildDomNode("select", args)
+	return NewDomNode("select", args)
 }
 
 func Small(args ...any) DomNode {
-	return buildDomNode("small", args)
+	return NewDomNode("small", args)
 }
 
 func Source(args ...any) DomNode {
-	return buildDomNode("source", args)
+	return NewDomNode("source", args)
 }
 
 func Span(args ...any) DomNode {
-	return buildDomNode("span", args)
+	return NewDomNode("span", args)
 }
 
 func Strong(args ...any) DomNode {
-	return buildDomNode("strong", args)
+	return NewDomNode("strong", args)
 }
 
 func Style(args ...any) DomNode {
-	return buildDomNode("style", args)
+	return NewDomNode("style", args)
 }
 
 func Sub(args ...any) DomNode {
-	return buildDomNode("sub", args)
+	return NewDomNode("sub", args)
 }
 
 func Summary(args ...any) DomNode {
-	return buildDomNode("summary", args)
+	return NewDomNode("summary", args)
 }
 
 func Sup(args ...any) DomNode {
-	return buildDomNode("sup", args)
+	return NewDomNode("sup", args)
 }
 
 func Svg(args ...any) DomNode {
-	return buildDomNode("svg", args)
+	return NewDomNode("svg", args)
 }
 
 func Table(args ...any) DomNode {
-	return buildDomNode("table", args)
+	return NewDomNode("table", args)
 }
 
 func Tbody(args ...any) DomNode {
-	return buildDomNode("tbody", args)
+	return NewDomNode("tbody", args)
 }
 
 func Td(args ...any) DomNode {
-	return buildDomNode("td", args)
+	return NewDomNode("td", args)
 }
 
 func Template(args ...any) DomNode {
-	return buildDomNode("template", args)
+	return NewDomNode("template", args)
 }
 
 func Textarea(args ...any) DomNode {
-	return buildDomNode("textarea", args)
+	return NewDomNode("textarea", args)
 }
 
 func Tfoot(args ...any) DomNode {
-	return buildDomNode("tfoot", args)
+	return NewDomNode("tfoot", args)
 }
 
 func Th(args ...any) DomNode {
-	return buildDomNode("th", args)
+	return NewDomNode("th", args)
 }
 
 func Thead(args ...any) DomNode {
-	return buildDomNode("thead", args)
+	return NewDomNode("thead", args)
 }
 
 func Time(args ...any) DomNode {
-	return buildDomNode("time", args)
+	return NewDomNode("time", args)
 }
 
 func Title(args ...any) DomNode {
-	return buildDomNode("title", args)
+	return NewDomNode("title", args)
 }
 
 func Tr(args ...any) DomNode {
-	return buildDomNode("tr", args)
+	return NewDomNode("tr", args)
 }
 
 func Track(args ...any) DomNode {
-	return buildDomNode("track", args)
+	return NewDomNode("track", args)
 }
 
 func U(args ...any) DomNode {
-	return buildDomNode("u", args)
+	return NewDomNode("u", args)
 }
 
 func Ul(args ...any) DomNode {
-	return buildDomNode("ul", args)
+	return NewDomNode("ul", args)
 }
 
 func Var(args ...any) DomNode {
-	return buildDomNode("var", args)
+	return NewDomNode("var", args)
 }
 
 func Video(args ...any) DomNode {
-	return buildDomNode("video", args)
+	return NewDomNode("video", args)
 }
 
 func Wbr(args ...any) DomNode {
-	return buildDomNode("wbr", args)
+	return NewDomNode("wbr", args)
 }

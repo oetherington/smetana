@@ -7,49 +7,49 @@ import (
 )
 
 func TestRenderDomNodeWithAttributes(t *testing.T) {
-	node := buildDomNode("div", []any{Attrs{"class": "foo"}})
+	node := NewDomNode("div", []any{Attrs{"class": "foo"}})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div class=\"foo\" />", result)
 }
 
 func TestRenderDomNodeWithChildren(t *testing.T) {
-	node := buildDomNode("div", []any{Children{Text("bar")}})
+	node := NewDomNode("div", []any{Children{Text("bar")}})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div>bar</div>", result)
 }
 
 func TestRenderDomNodeWithSingleAttribute(t *testing.T) {
-	node := buildDomNode("div", []any{Attr{"foo", "bar"}})
+	node := NewDomNode("div", []any{Attr{"foo", "bar"}})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div foo=\"bar\" />", result)
 }
 
 func TestRenderDomNodeWithSingleChild(t *testing.T) {
-	node := buildDomNode("div", []any{Text("bar")})
+	node := NewDomNode("div", []any{Text("bar")})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div>bar</div>", result)
 }
 
 func TestRenderDomNodeWithClasses(t *testing.T) {
-	node := buildDomNode("div", []any{Classes{"foo": true, "bar": false}})
+	node := NewDomNode("div", []any{Classes{"foo": true, "bar": false}})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div class=\"foo\" />", result)
 }
 
 func TestRenderDomNodeWithClassName(t *testing.T) {
-	node := buildDomNode("div", []any{ClassName("foo")})
+	node := NewDomNode("div", []any{ClassName("foo")})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div class=\"foo\" />", result)
 }
 
 func TestRenderDomNodeWithStrings(t *testing.T) {
-	node := buildDomNode("div", []any{Classes{"a": true}})
+	node := NewDomNode("div", []any{Classes{"a": true}})
 	result := RenderOpts(node, true, nil)
 	assertEqual(t, "<div class=\"a\" />", result)
 }
 
 func TestDomNodeReportsErrors(t *testing.T) {
-	node := buildDomNode("div", []any{3})
+	node := NewDomNode("div", []any{3})
 	var target strings.Builder
 	logger := log.New(&target, "", 0)
 	result := RenderOpts(node, true, logger)

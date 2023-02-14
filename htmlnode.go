@@ -10,5 +10,5 @@ func (node HtmlNode) ToHtml(builder *Builder) {
 }
 
 func Html(args ...any) HtmlNode {
-	return HtmlNode{buildDomNode("html", args)}
+	return HtmlNode{NewDomNode("html", args)}
 }
