@@ -14,14 +14,18 @@ const (
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
-var src = rand.NewSource(time.Now().UnixNano())
+var randomStringSrc = rand.NewSource(time.Now().UnixNano())
 
-// https://stackoverflow.com/a/31832326
+/*
+ * Generate a string of random letters with length `n`. This is used for
+ * programatically generating class names. Based on the algorithm at
+ * https://stackoverflow.com/a/31832326
+ */
 func randomString(n int) string {
 	b := make([]byte, n)
-	for i, cache, remain := n-1, src.Int63(), letterIdxMax; i >= 0; {
+	for i, cache, remain := n-1, randomStringSrc.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
-			cache, remain = src.Int63(), letterIdxMax
+			cache, remain = randomStringSrc.Int63(), letterIdxMax
 		}
 		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
 			b[i] = letterBytes[idx]
