@@ -6,6 +6,16 @@ import (
 	"strings"
 )
 
+/*
+ * Struct for tracking internal state during compilation.
+ * `Buf` is the string buffer being writter to.
+ * By default, the order of HTML tag attributes is undefined and
+ * non-deterministic. It can be changed to be deterministic by
+ * setting `deterministicAttributes` to true. Note that this has
+ * a significant performance cost.
+ * `logger` is used for reporting warnings and errors during
+ * compilation.
+ */
 type Builder struct {
 	Buf                     strings.Builder
 	deterministicAttributes bool
