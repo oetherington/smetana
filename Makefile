@@ -20,4 +20,7 @@ build-example:
 run-built-example:
 	./example/example
 
+docs:
+	godoc -http=127.0.0.1:6060
+
 check: test run-example lint check-fmt
