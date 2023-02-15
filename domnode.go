@@ -85,7 +85,7 @@ func NewDomNode(tag Tag, args []any) DomNode {
 		case Node:
 			node.Children = append(node.Children, value)
 		case ClassName, Classes:
-			node.Attrs["class"] = ClassNames(node.Attrs["class"], value)
+			node.Attrs["class"] = string(ClassNames(node.Attrs["class"], value))
 		case string:
 			node.Children = append(node.Children, Text(value))
 		default:

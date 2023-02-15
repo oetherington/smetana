@@ -25,7 +25,8 @@ func main() {
 		s.Body(
 			container,
 			s.Div(
-				s.Attrs{"class": s.ClassNames("foo", "bar")},
+				s.Attrs{"area-label": "hello world"},
+				s.ClassNames("foo", "bar"),
 				s.Span(s.Text("Hello world")),
 			),
 			s.Div(s.Text("foobar")),

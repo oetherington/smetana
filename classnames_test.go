@@ -24,7 +24,7 @@ func TestClassesNamesCanBeConditional(t *testing.T) {
 		"c": 1 == 2,
 		"d": 1 == 1,
 	})
-	assertOneOf(t, []string{"a d", "d a"}, result)
+	assertOneOf(t, []ClassName{"a d", "d a"}, result)
 }
 
 func TestCanMixConditionalAndUnconditionalClasses(t *testing.T) {

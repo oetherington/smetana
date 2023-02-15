@@ -19,7 +19,7 @@ type Classes map[ClassName]bool
 //   - [Classes]
 //
 // Arguments of other types are ignored.
-func ClassNames(args ...any) string {
+func ClassNames(args ...any) ClassName {
 	classes := []string{}
 	for _, arg := range args {
 		switch item := arg.(type) {
@@ -41,5 +41,5 @@ func ClassNames(args ...any) string {
 			break
 		}
 	}
-	return strings.Join(classes, " ")
+	return ClassName(strings.Join(classes, " "))
 }
