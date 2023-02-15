@@ -66,6 +66,8 @@ func writeProps(sb *strings.Builder, props CssProps) {
 			sb.WriteString(item)
 		case fmt.Stringer:
 			sb.WriteString(item.String())
+		case Color:
+			sb.WriteString(item.ToCssColor())
 		case int:
 			sb.WriteString(fmt.Sprintf("%dpx", item))
 		default:

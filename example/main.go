@@ -8,7 +8,7 @@ import (
 func main() {
 	styles := s.NewStyleSheet()
 	container := styles.AddClass(s.CssProps{
-		"background": "red",
+		"background": s.Rgb(255, 0, 255),
 		"padding":    s.EM(2),
 	})
 
