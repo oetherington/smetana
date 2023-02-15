@@ -4,6 +4,6 @@ import "testing"
 
 func TestRenderHtmlNode(t *testing.T) {
 	node := Html(Attrs{"lang": "en"}, Children{Head(), Body()})
-	result := RenderOpts(node, true, nil)
+	result := RenderHtmlOpts(node, true, nil)
 	assertEqual(t, "<!DOCTYPE html>\n<html lang=\"en\"><head /><body /></html>", result)
 }

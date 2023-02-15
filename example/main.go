@@ -32,6 +32,6 @@ func main() {
 		),
 	)
 
-	fmt.Println(styles.ToCss())
-	fmt.Println(s.Render(node))
+	fmt.Println(s.RenderCss(styles))
+	fmt.Println(s.RenderHtml(node))
 }
