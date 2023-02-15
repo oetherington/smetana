@@ -11,7 +11,7 @@ type DomNode struct {
 	errors   []error
 }
 
-// Convert a [DomNode] to HTML
+// Convert a [DomNode] to HTML.
 func (node DomNode) ToHtml(builder *Builder) {
 	if node.errors != nil {
 		for _, err := range node.errors {
@@ -40,7 +40,7 @@ func (node *DomNode) AssignAttrs(attrs Attrs) {
 	}
 }
 
-// Append more children to the end of a [DomNode]
+// Append more children to the end of a [DomNode].
 func (node *DomNode) AssignChildren(children Children) {
 	if len(node.Children) < 1 {
 		node.Children = children
@@ -49,7 +49,7 @@ func (node *DomNode) AssignChildren(children Children) {
 	}
 }
 
-// Record a compilation error for a [DomNode]
+// Record a compilation error for a [DomNode].
 func (node *DomNode) appendError(err error) {
 	if node.errors == nil {
 		node.errors = []error{}
