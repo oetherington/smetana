@@ -67,7 +67,7 @@ Note that the actual output will be automatically minified.
 
 You may notice in the example above that we used `Charset` and `LinkHref` which
 aren't the names of HTML tags. We could have instead directly used created a
-`<meta>` DOM node (or the [MetaNode helper](meta-tags)),, but a number of
+`<meta>` DOM node (or the [MetaNode helper](#meta-tags)), but a number of
 [special helpers](#special-case-helpers) are also included to avoid boilerplate
 code for the most common use cases.
 
