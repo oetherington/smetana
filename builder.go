@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Struct for tracking internal state during HTML compilation.
+// Struct for tracking internal state during HTML and CSS compilation.
 //   - `Buf` is the string buffer being written to.
 //   - By default, the order of HTML tag attributes is undefined and
 //     non-deterministic. It can be changed to be deterministic by

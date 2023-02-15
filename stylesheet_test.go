@@ -7,7 +7,7 @@ import (
 
 func TestCanRenderEmptyStyleSheet(t *testing.T) {
 	styles := NewStyleSheet()
-	assertEqual(t, "", styles.ToCss())
+	assertEqual(t, "", RenderCss(styles))
 }
 
 func TestCanAddClassWithStringProp(t *testing.T) {
@@ -16,7 +16,7 @@ func TestCanAddClassWithStringProp(t *testing.T) {
 		"cursor": "pointer",
 	})
 	assertEqual(t, 8, len(class))
-	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), styles.ToCss())
+	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), RenderCss(styles))
 }
 
 type CustomProp struct {
@@ -33,7 +33,7 @@ func TestCanAddClassWithCustomStringerProp(t *testing.T) {
 		"padding": CustomProp{4},
 	})
 	assertEqual(t, 8, len(class))
-	assertEqual(t, fmt.Sprintf(".%s{padding:8;}", class), styles.ToCss())
+	assertEqual(t, fmt.Sprintf(".%s{padding:8;}", class), RenderCss(styles))
 }
 
 func TestCanAddClassWithIntProp(t *testing.T) {
@@ -42,5 +42,5 @@ func TestCanAddClassWithIntProp(t *testing.T) {
 		"margin": 10,
 	})
 	assertEqual(t, 8, len(class))
-	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), styles.ToCss())
+	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), RenderCss(styles))
 }

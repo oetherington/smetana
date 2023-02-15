@@ -1,9 +1,6 @@
 package smetana
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 // A map from CSS property names to their values. For instance,
 //
@@ -42,38 +39,35 @@ func (styles *StyleSheet) AddClass(props CssProps) ClassName {
 }
 
 // Compile a [StyleSheet] into a CSS String.
-func (styles StyleSheet) ToCss() string {
-	var sb strings.Builder
-
+func (styles StyleSheet) ToCss(builder *Builder) {
 	for name, props := range styles.Classes {
-		sb.WriteByte('.')
-		sb.WriteString(string(name))
-		sb.WriteByte('{')
-		writeProps(&sb, props)
-		sb.WriteByte('}')
+		builder.Buf.WriteByte('.')
+		builder.Buf.WriteString(string(name))
+		builder.Buf.WriteByte('{')
+		writeProps(builder, props)
+		builder.Buf.WriteByte('}')
 	}
-
-	return sb.String()
 }
 
-func writeProps(sb *strings.Builder, props CssProps) {
+func writeProps(builder *Builder, props CssProps) {
 	for key, value := range props {
-		sb.WriteString(key)
-		sb.WriteByte(':')
+		builder.Buf.WriteString(key)
+		builder.Buf.WriteByte(':')
 
 		switch item := value.(type) {
 		case string:
-			sb.WriteString(item)
+			builder.Buf.WriteString(item)
 		case fmt.Stringer:
-			sb.WriteString(item.String())
+			builder.Buf.WriteString(item.String())
 		case Color:
-			sb.WriteString(item.ToCssColor())
+			builder.Buf.WriteString(item.ToCssColor())
 		case int:
-			sb.WriteString(fmt.Sprintf("%dpx", item))
+			builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
 		default:
-			break // TODO: How should we handle this error?
+			err := fmt.Errorf("Invalid CSS value: %v", item)
+			builder.Logger.Println(err)
 		}
 
-		sb.WriteByte(';')
+		builder.Buf.WriteByte(';')
 	}
 }
