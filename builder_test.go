@@ -42,7 +42,7 @@ func TestCustomLogger(t *testing.T) {
 	var target strings.Builder
 	logger := log.New(&target, "", 0)
 	builder := Builder{strings.Builder{}, true, logger}
-	builder.logger.Print("Hello world")
+	builder.Logger.Print("Hello world")
 	result := strings.TrimSpace(target.String())
 	assertEqual(t, "Hello world", result)
 }

@@ -6,20 +6,18 @@ import (
 	"strings"
 )
 
-/*
- * Struct for tracking internal state during compilation.
- * `Buf` is the string buffer being writter to.
- * By default, the order of HTML tag attributes is undefined and
- * non-deterministic. It can be changed to be deterministic by
- * setting `deterministicAttributes` to true. Note that this has
- * a significant performance cost.
- * `logger` is used for reporting warnings and errors during
- * compilation.
- */
+// Struct for tracking internal state during HTML compilation.
+//   - `Buf` is the string buffer being written to.
+//   - By default, the order of HTML tag attributes is undefined and
+//     non-deterministic. It can be changed to be deterministic by
+//     setting `deterministicAttributes` to true. Note that this has
+//     a significant performance cost.
+//   - `logger` is used for reporting warnings and errors during
+//     compilation.
 type Builder struct {
 	Buf                     strings.Builder
-	deterministicAttributes bool
-	logger                  *log.Logger
+	DeterministicAttributes bool
+	Logger                  *log.Logger
 }
 
 func (builder *Builder) writeAttr(key string, value string) {
@@ -31,7 +29,7 @@ func (builder *Builder) writeAttr(key string, value string) {
 }
 
 func (builder *Builder) writeAttrs(attrs Attrs) {
-	if builder.deterministicAttributes {
+	if builder.DeterministicAttributes {
 		keys := make([]string, 0, len(attrs))
 		for k := range attrs {
 			keys = append(keys, k)
