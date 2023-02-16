@@ -234,6 +234,22 @@ ClassNames("foo", "bar", Classes{"baz": false, "bop": true, "boz": 2 > 1})
 ```
 compiles to `"foo bar bop boz"`;
 
+#### Custom fonts
+
+Smetana can also generate `@font-face` directives to load custom fonts like so:
+```go
+styles := NewStyleSheet()
+font := styles.AddFont("OpenSans", "OpenSans.ttf", "OpenSans.woff2")
+class := styles.AddClass(CssProps{
+	"font-family": font,
+})
+```
+
+The `AddFont` function takes the name of the font family as the first argument
+(which is also returned for convenience), followed by a variadic list of URLs
+to the font sources. The type of each source is detected from its extension
+which should be one of "ttf", "woff", "woff2" or "otf".
+
 ## License
 
 Smetana is free software under the MIT license.

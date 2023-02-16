@@ -7,7 +7,9 @@ import (
 
 func main() {
 	styles := s.NewStyleSheet()
+	font := styles.AddFont("OpenSans", "OpenSans.woff2")
 	container := styles.AddClass(s.CssProps{
+		"font-family": font,
 		"background": s.Rgb(255, 0, 255),
 		"padding":    s.EM(2),
 	})
