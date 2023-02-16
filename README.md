@@ -4,6 +4,7 @@
 [![https://github.com/oetherington/smetana/actions/workflows/ci.yml](https://github.com/oetherington/smetana/actions/workflows/ci.yml/badge.svg)](https://github.com/oetherington/smetana/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/oetherington/smetana/badge.svg?branch=main)](https://coveralls.io/github/oetherington/smetana?branch=main)
 [![https://goreportcard.com/report/github.com/oetherington/smetana](https://goreportcard.com/badge/github.com/oetherington/smetana)](https://goreportcard.com/report/github.com/oetherington/smetana)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Smetana is an HTML and CSS generator for Go, designed for server-side webpage
 rendering.
