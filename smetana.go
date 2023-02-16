@@ -94,7 +94,7 @@ func RenderCssOpts(styles StyleSheet, logger *log.Logger) string {
 		logger = log.New(os.Stderr, "", 0)
 	}
 	builder := Builder{strings.Builder{}, false, logger}
-	styles.ToCss(&builder)
+	styles.Compile(&builder)
 	return builder.Buf.String()
 }
 

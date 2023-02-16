@@ -250,6 +250,15 @@ The `AddFont` function takes the name of the font family as the first argument
 to the font sources. The type of each source is detected from its extension
 which should be one of "ttf", "woff", "woff2" or "otf".
 
+#### Inserting raw CSS
+
+For more complex or obscure features it may be desirabe to add some manually
+written CSS. This can be done with the `AddCss` function:
+```go
+styles := NewStyleSheet()
+styles.AddCss("@media only screen and (max-width:600px) {body{width:100%;}}")
+```
+
 ## License
 
 Smetana is free software under the MIT license.

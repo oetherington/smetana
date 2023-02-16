@@ -23,81 +23,70 @@ type CssProps map[string]any
 // The name of a CSS class.
 type ClassName string
 
-// [StyleSheet] aggregates the CSS styles for a page and compiles them
-// from the in-code representation into a CSS string for the browser.
-type StyleSheet struct {
-	FontFaces map[string][]string
-	Classes   map[ClassName]CssProps
+// Interface representing an abstract element to be inserted into a CSS.
+// [StyleSheet]
+type StyleSheetElement interface {
+	ToCss(builder *Builder)
 }
 
-// Create a new empty [StyleSheet].
-func NewStyleSheet() StyleSheet {
-	return StyleSheet{
-		map[string][]string{},
-		map[ClassName]CssProps{},
-	}
+// Raw CSS type implementing [StyleSheetElement].
+type StyleSheetCss string
+
+// Convert [StyleSheetCSS] into a CSS string.
+func (css StyleSheetCss) ToCss(builder *Builder) {
+	builder.Buf.WriteString(string(css))
 }
 
-// Add a new @font-face to the [StyleSheet]. `family` is the name to give
-// to the CSS "font-family". `srcs` is an array of strings containing the
-// URLs of the font files. The type of each src is automatically determined
-// based on the file extension which should be one of "ttf", "woff", "woff2"
-// or "otf".
-func (styles *StyleSheet) AddFont(family string, srcs ...string) string {
-	styles.FontFaces[family] = srcs
-	return family
-}
-
-// Add a new class to a [StyleSheet].
-func (styles *StyleSheet) AddClass(props CssProps) ClassName {
-	name := ClassName(RandomString(8))
-	styles.Classes[name] = props
-	return name
-}
-
-// Compile a [StyleSheet] into a CSS String.
-func (styles StyleSheet) ToCss(builder *Builder) {
-	for family, srcs := range styles.FontFaces {
-		builder.Buf.WriteString("@font-face{font-family:")
-		builder.Buf.WriteString(family)
-		builder.Buf.WriteString(";src:")
-		for i, src := range srcs {
-			if i > 0 {
-				builder.Buf.WriteByte(',')
-			}
-			writeFontSrc(builder, src)
-		}
-		builder.Buf.WriteString(";}")
-	}
-
-	for name, props := range styles.Classes {
-		builder.Buf.WriteByte('.')
-		builder.Buf.WriteString(string(name))
-		builder.Buf.WriteByte('{')
-		writeProps(builder, props)
-		builder.Buf.WriteByte('}')
-	}
+// @font-face type implementing [StyleSheetElement].
+type StyleSheetFontFace struct {
+	Family string
+	Srcs   []string
 }
 
 func isValidFontExtension(ext string) bool {
 	return ext == ".ttf" || ext == ".woff" || ext == ".woff2" || ext == ".otf"
 }
 
-func writeFontSrc(builder *Builder, src string) {
-	builder.Buf.WriteString("url(")
-	builder.Buf.WriteString(src)
-	builder.Buf.WriteString(")format('")
-	ext := filepath.Ext(src)
-	if isValidFontExtension(ext) {
-		builder.Buf.WriteString(ext[1:])
-	} else {
-		err := fmt.Errorf("Invalid extension for font '%s'", src)
-		builder.Logger.Panicln(err)
+// Convert a [StyleSheetFontFace] into a CSS string.
+func (font StyleSheetFontFace) ToCss(builder *Builder) {
+	builder.Buf.WriteString("@font-face{font-family:")
+	builder.Buf.WriteString(font.Family)
+	builder.Buf.WriteString(";src:")
+	for i, src := range font.Srcs {
+		if i > 0 {
+			builder.Buf.WriteByte(',')
+		}
+		builder.Buf.WriteString("url(")
+		builder.Buf.WriteString(src)
+		builder.Buf.WriteString(")format('")
+		ext := filepath.Ext(src)
+		if isValidFontExtension(ext) {
+			builder.Buf.WriteString(ext[1:])
+		} else {
+			err := fmt.Errorf("Invalid extension for font '%s'", src)
+			builder.Logger.Panicln(err)
+		}
+		builder.Buf.WriteString("')")
 	}
-	builder.Buf.WriteString("')")
+	builder.Buf.WriteString(";}")
 }
 
-func writeProps(builder *Builder, props CssProps) {
+// CSS class type implementing [StyleSheetElement].
+type StyleSheetClass struct {
+	Name  ClassName
+	Props CssProps
+}
+
+// Convert a [StyleSheetClass] into a CSS string.
+func (class StyleSheetClass) ToCss(builder *Builder) {
+	builder.Buf.WriteByte('.')
+	builder.Buf.WriteString(string(class.Name))
+	builder.Buf.WriteByte('{')
+	writeClassProps(builder, class.Props)
+	builder.Buf.WriteByte('}')
+}
+
+func writeClassProps(builder *Builder, props CssProps) {
 	for key, value := range props {
 		builder.Buf.WriteString(key)
 		builder.Buf.WriteByte(':')
@@ -117,5 +106,51 @@ func writeProps(builder *Builder, props CssProps) {
 		}
 
 		builder.Buf.WriteByte(';')
+	}
+}
+
+// [StyleSheet] aggregates the CSS styles for a page and compiles them
+// from the in-code representation into a CSS string for the browser.
+type StyleSheet struct {
+	Elements []StyleSheetElement
+}
+
+// Create a new empty [StyleSheet].
+func NewStyleSheet() StyleSheet {
+	return StyleSheet{[]StyleSheetElement{}}
+}
+
+// Add a raw CSS string to the [StyleSheet]
+func (styles *StyleSheet) AddCss(css StyleSheetCss) {
+	styles.Elements = append(styles.Elements, css)
+}
+
+// Add a new @font-face to the [StyleSheet]. `family` is the name to give
+// to the CSS "font-family". `srcs` is an array of strings containing the
+// URLs of the font files. The type of each src is automatically determined
+// based on the file extension which should be one of "ttf", "woff", "woff2"
+// or "otf".
+func (styles *StyleSheet) AddFont(family string, srcs ...string) string {
+	styles.Elements = append(styles.Elements, StyleSheetFontFace{
+		family,
+		srcs,
+	})
+	return family
+}
+
+// Add a new class to a [StyleSheet].
+func (styles *StyleSheet) AddClass(props CssProps) ClassName {
+	name := ClassName(RandomString(8))
+	styles.Elements = append(styles.Elements, StyleSheetClass{
+		name,
+		props,
+	})
+	return name
+}
+
+// Compile a [StyleSheet] into a CSS String.
+func (styles StyleSheet) Compile(builder *Builder) {
+	for _, element := range styles.Elements {
+		element.ToCss(builder)
 	}
 }

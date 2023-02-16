@@ -21,6 +21,12 @@ func TestCanValidateFontExtensions(t *testing.T) {
 	assertEqual(t, false, isValidFontExtension(".go"))
 }
 
+func TestCanAddARawCssString(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddCss(".hello{background:red;}")
+	assertEqual(t, ".hello{background:red;}", RenderCss(styles))
+}
+
 func TestCanAddFontFace(t *testing.T) {
 	styles := NewStyleSheet()
 	font := styles.AddFont("OpenSans", "OpenSans.ttf", "OpenSans.woff2")
