@@ -165,10 +165,6 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{Pre(Text("foo")), "<pre>foo</pre>"},
 		{Progress(Text("foo")), "<progress>foo</progress>"},
 		{Q(Text("foo")), "<q>foo</q>"},
-		{
-			Refresh(30),
-			"<meta content=\"30\" http-equiv=\"refresh\" />",
-		},
 		{Rp(Text("foo")), "<rp>foo</rp>"},
 		{Rt(Text("foo")), "<rt>foo</rt>"},
 		{Ruby(Text("foo")), "<ruby>foo</ruby>"},

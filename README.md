@@ -5,7 +5,8 @@ rendering.
 
 ## Features
  - Simple component-like [API](#usage)
- - Built-in support for all HTML5 tags, and easily extensible for web components
+ - Built-in support for all HTML5 tags, and easily extensible for web
+   components
  - Strongly-typed CSS units and colors
  - Robust with >95% test coverage
  - Zero dependencies outside the Go standard library
@@ -93,8 +94,6 @@ use-cases:
    `<h6>` with the given level.
  - `func LinkHref(rel string, href string)` builds a `<link>` tag with the
    given rel and URL.
- - `func Refresh(value uint) DomNode` builds a `<meta>` tag with
-   `http-equiv="refresh"` and "content" set to the given integer value.
  - `func ScriptSrc(src string) DomNode` builds a `<script>` tag with the given
    src.
 
@@ -112,7 +111,15 @@ property and so only take a single "value" string:
  - `Viewport` (pass the empty string for the default value of
    "width=device-width, initial-scale=1.0")
 
-as well as the `Refresh` and `Charset` functions mentioned above.
+as well as the `Charset` function mentioned above.
+
+Smetana also supports natively "http-equiv" meta tags:
+ - `func Equiv(equiv string, content string) EquivNode` builds a `<meta>` tag
+    with "http-equiv" set to `equiv` and "content" set to `content`.
+ - `func Refresh(value uint) DomNode` builds a `<meta>` tag with
+   "http-equiv" set to "refresh"` and "content" set to the given integer value.
+ - `func XUaCompatible(value string) EquivNode` builds a `<meta>` tag with
+   "http-equiv" set to "x-ua-compatible" and "content" set to `value`.
 
 #### Fragment nodes
 

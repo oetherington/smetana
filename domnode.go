@@ -508,15 +508,6 @@ func Q(args ...any) DomNode {
 	return NewDomNode("q", args)
 }
 
-// Create a `meta` DOM node with "http-equiv" set to "refresh" and "content"
-// set to the provided value in seconds.
-func Refresh(value uint) DomNode {
-	return DomNode{"meta", Attrs{
-		"http-equiv": "refresh",
-		"content":    fmt.Sprintf("%d", value),
-	}, Children{}, nil}
-}
-
 // Create an `rp` DOM node. Arguments follow the semantics of [NewDomNode].
 func Rp(args ...any) DomNode {
 	return NewDomNode("rp", args)
