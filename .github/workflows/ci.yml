@@ -20,6 +20,11 @@ jobs:
     - name: Run tests
       run: make test
 
+    - name: Upload coverage
+      uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: coverage.cov
+
   build-example:
     runs-on: ubuntu-latest
     steps:

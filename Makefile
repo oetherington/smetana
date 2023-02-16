@@ -1,5 +1,5 @@
 test:
-	go test -v -coverprofile=coverage.out
+	go test -v -coverprofile=coverage.cov
 
 lint:
 	go vet .
