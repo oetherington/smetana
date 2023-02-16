@@ -26,7 +26,7 @@ import (
 )
 ```
 
-Aliasing to `s` (or even `_`) is optional but advised.
+Aliasing to `s` (or even `.`) is optional but advised.
 
 ### Building HTML
 
