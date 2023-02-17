@@ -2,6 +2,27 @@ package smetana
 
 import "testing"
 
+func TestCanConvertHexToRgb(t *testing.T) {
+	assertEqual(t, RGB{0, 0, 0}, Hex("#000000"))
+	assertEqual(t, RGB{255, 255, 255}, Hex("#FFFFFF"))
+	assertEqual(t, RGB{255, 255, 255}, Hex("#ffffff"))
+	assertEqual(t, RGB{255, 0, 0}, Hex("#ff0000"))
+	assertEqual(t, RGB{0, 255, 0}, Hex("#00ff00"))
+	assertEqual(t, RGB{0, 0, 255}, Hex("#0000ff"))
+	assertEqual(t, RGB{136, 136, 136}, Hex("#888888"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("#000"))
+	assertEqual(t, RGB{255, 255, 255}, Hex("#fff"))
+	assertEqual(t, RGB{255, 0, 0}, Hex("#f00"))
+	assertEqual(t, RGB{0, 255, 0}, Hex("#0f0"))
+	assertEqual(t, RGB{0, 0, 255}, Hex("#00f"))
+	assertEqual(t, RGB{136, 136, 136}, Hex("#888"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("invalid-color"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("#xxxxxx"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("#xxx"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("xxxxxxx"))
+	assertEqual(t, RGB{0, 0, 0}, Hex("xxxx"))
+}
+
 func TestRgbToCssColor(t *testing.T) {
 	assertEqual(t, "#000000", Rgb(0, 0, 0).ToCssColor())
 	assertEqual(t, "#FF0000", Rgb(255, 0, 0).ToCssColor())

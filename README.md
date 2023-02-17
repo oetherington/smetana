@@ -13,7 +13,7 @@ rendering.
  - Simple component-like [API](#usage)
  - Built-in support for all HTML5 tags, and easily extensible for web
    components
- - Strongly-typed CSS units and colors
+ - Strongly-typed CSS [units](#adding-units) and [colors](#using-colors)
  - Robust with >95% test coverage
  - Zero dependencies outside the Go standard library
 
@@ -232,6 +232,9 @@ CssProps{"background": Rgb(255, 255, 0)}
 which will compile to `background: #FFFF00` in CSS.
 
 Aside from `RGB`, there are also helpers for `RGBA`, `HSL` and `HSLA`.
+
+The `Hex` function will create an `RGB` color from a 4-digit or 7-digit CSS
+hex color string, such as `#ab4` or `#FF00FF`.
 
 #### Adding units
 

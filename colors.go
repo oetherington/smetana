@@ -1,6 +1,9 @@
 package smetana
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // A color value, suitable for use in CSS.
 type Color interface {
@@ -23,6 +26,43 @@ func (c RGB) ToCssColor() string {
 // Create an [RGB] color.
 func Rgb(r uint8, g uint8, b uint8) RGB {
 	return RGB{r, g, b}
+}
+
+// Convert a 7-digit hex string to an unsigned integer. It is the _callers_
+// responsibility to check the input is the correct length.
+func longHexToInt(s string) uint32 {
+	if s[0] != '#' {
+		return 0
+	}
+	result, err := strconv.ParseInt(s[1:], 16, 32)
+	if err != nil {
+		return 0
+	}
+	return uint32(result)
+}
+
+// Convert a 4-digit hex string to an unsigned integer. It is the _callers_
+// responsibility to check the input is the correct length.
+func shortHexToInt(s string) uint32 {
+	long := []byte{s[0], s[1], s[1], s[2], s[2], s[3], s[3]}
+	return longHexToInt(string(long))
+}
+
+// Create an [RGB] color from a hex string (ie; "#FFFFFF").
+func Hex(s string) RGB {
+	var result uint32
+	if len(s) == 7 {
+		result = longHexToInt(s)
+	} else if len(s) == 4 {
+		result = shortHexToInt(s)
+	} else {
+		return RGB{0, 0, 0}
+	}
+	return RGB{
+		uint8((result >> 16) & 0xff),
+		uint8((result >> 8) & 0xff),
+		uint8(result & 0xff),
+	}
 }
 
 // Structure representing an [RGB] color plus an alpha channel. All values are
