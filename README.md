@@ -205,6 +205,12 @@ which will render to
 Note that the name of the class will actually be a random string, not the word
 "container".
 
+To use arbitrary CSS selectors you can instead use `AddBlock`:
+```go
+styles.AddBlock("body", CssProps{"background": "red"})
+styles.AddBlock(".container > div", CssProps{"display": "flex"})
+```
+
 #### Using colors
 
 Instead of entering CSS color strings by hand, Smetana provides several helper

@@ -70,3 +70,11 @@ func TestCanAddClassWithIntProp(t *testing.T) {
 	assertEqual(t, 8, len(class))
 	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), RenderCss(styles))
 }
+
+func TestCanAddBlock(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": "red",
+	})
+	assertEqual(t, "body{background:red;}", RenderCss(styles))
+}

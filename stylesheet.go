@@ -71,18 +71,17 @@ func (font StyleSheetFontFace) ToCss(builder *Builder) {
 	builder.Buf.WriteString(";}")
 }
 
-// CSS class type implementing [StyleSheetElement].
-type StyleSheetClass struct {
-	Name  ClassName
-	Props CssProps
+// CSS block type implementing [StyleSheetElement].
+type StyleSheetBlock struct {
+	Selector string
+	Props    CssProps
 }
 
 // Convert a [StyleSheetClass] into a CSS string.
-func (class StyleSheetClass) ToCss(builder *Builder) {
-	builder.Buf.WriteByte('.')
-	builder.Buf.WriteString(string(class.Name))
+func (block StyleSheetBlock) ToCss(builder *Builder) {
+	builder.Buf.WriteString(block.Selector)
 	builder.Buf.WriteByte('{')
-	writeClassProps(builder, class.Props)
+	writeClassProps(builder, block.Props)
 	builder.Buf.WriteByte('}')
 }
 
@@ -141,11 +140,19 @@ func (styles *StyleSheet) AddFont(family string, srcs ...string) string {
 // Add a new class to a [StyleSheet].
 func (styles *StyleSheet) AddClass(props CssProps) ClassName {
 	name := ClassName(RandomString(8))
-	styles.Elements = append(styles.Elements, StyleSheetClass{
-		name,
+	styles.Elements = append(styles.Elements, StyleSheetBlock{
+		fmt.Sprintf(".%s", name),
 		props,
 	})
 	return name
+}
+
+// Add a new block to a [StyleSheet].
+func (styles *StyleSheet) AddBlock(selector string, props CssProps) {
+	styles.Elements = append(styles.Elements, StyleSheetBlock{
+		selector,
+		props,
+	})
 }
 
 // Compile a [StyleSheet] into a CSS String.
