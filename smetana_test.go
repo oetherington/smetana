@@ -32,6 +32,11 @@ func assertOneOf[T any](t *testing.T, exp []T, got T) {
 	t.Fatalf("Expecting one of '%v' got '%v'\n", exp, got)
 }
 
+func TestRenderNodeWithDefaultOptions(t *testing.T) {
+	result := RenderHtml(Text("Hello world"))
+	assertEqual(t, "Hello world", result)
+}
+
 func TestMergeMaps(t *testing.T) {
 	m1 := map[string]int{"foo": 1, "bar": 2}
 	m2 := map[string]int{"baz": 3}

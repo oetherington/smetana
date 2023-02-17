@@ -13,3 +13,10 @@ func TestRenderEmptyFragmentNode(t *testing.T) {
 	result := RenderHtmlOpts(node, true, nil)
 	assertEqual(t, "", result)
 }
+
+func TestCanAppendChildrenToFragment(t *testing.T) {
+	node := Fragment(Span("Foo"))
+	node.AssignChildren([]Node{Div("Bar")})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<span>Foo</span><div>Bar</div>", result)
+}

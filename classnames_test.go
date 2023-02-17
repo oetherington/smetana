@@ -37,3 +37,8 @@ func TestCanMixConditionalAndUnconditionalClasses(t *testing.T) {
 	})
 	assertEqual(t, "foo a bar f", result)
 }
+
+func TestClassNamesIgnoresInvalidArgumentTypes(t *testing.T) {
+	result := ClassNames("foo", 3)
+	assertEqual(t, "foo", result)
+}

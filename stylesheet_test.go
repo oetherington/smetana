@@ -71,6 +71,15 @@ func TestCanAddClassWithIntProp(t *testing.T) {
 	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), RenderCss(styles))
 }
 
+func TestCanAddClassWithColorProp(t *testing.T) {
+	styles := NewStyleSheet()
+	class := styles.AddClass("container", CssProps{
+		"color": Rgb(255, 0, 0),
+	})
+	assertEqual(t, "container", class)
+	assertEqual(t, fmt.Sprintf(".%s{color:#FF0000;}", class), RenderCss(styles))
+}
+
 func TestCanAddAnonClass(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddAnonClass(CssProps{
