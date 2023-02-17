@@ -57,3 +57,13 @@ func TestIdHelper(t *testing.T) {
 	result := Id("foo")
 	assertEqual(t, Attr{Key: "id", Value: "foo"}, result)
 }
+
+func TestMin(t *testing.T) {
+	assertEqual(t, 2, min(2, 3))
+	assertEqual(t, 2, min(3, 2))
+}
+
+func TestMax(t *testing.T) {
+	assertEqual(t, 3, max(2, 3))
+	assertEqual(t, 3, max(3, 2))
+}

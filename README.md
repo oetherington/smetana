@@ -236,6 +236,8 @@ Aside from `RGB`, there are also helpers for `RGBA`, `HSL` and `HSLA`.
 The `Hex` function will create an `RGB` color from a 4-digit or 7-digit CSS
 hex color string, such as `#ab4` or `#FF00FF`.
 
+For easier manipulation and normalization, all colors have a `ToHsla()` method.
+
 #### Adding units
 
 Helpers are also provided to strongly type CSS units. For example,

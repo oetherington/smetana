@@ -110,3 +110,26 @@ func mergeMaps[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 		dst[k] = v
 	}
 }
+
+type ordered interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~float32 | ~float64 |
+		string
+}
+
+func min[T ordered](a T, b T) T {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func max[T ordered](a T, b T) T {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}

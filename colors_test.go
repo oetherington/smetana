@@ -49,3 +49,30 @@ func TestHslaToCssColor(t *testing.T) {
 	assertEqual(t, "hsla(120, 0.0%, 100.0%, 1.00)", Hsla(120, 0.0, 1.0, 1.0).ToCssColor())
 	assertEqual(t, "hsla(240, 90.0%, 10.0%, 0.60)", Hsla(240, 0.9, 0.1, 0.6).ToCssColor())
 }
+
+func TestRgbToHsla(t *testing.T) {
+	// TODO
+}
+
+func TestRgbaToHsla(t *testing.T) {
+	black := Rgba(0, 0, 0, 255)
+	assertEqual(t, Hsla(0, 0, 0, 1), black.ToHsla())
+	white := Rgba(255, 255, 255, 255)
+	assertEqual(t, Hsla(0, 0, 1, 1), white.ToHsla())
+	red := Rgba(255, 0, 0, 255)
+	assertEqual(t, Hsla(0, 1, 0.5, 1), red.ToHsla())
+	green := Rgba(0, 255, 0, 255)
+	assertEqual(t, Hsla(120, 1, 0.5, 1), green.ToHsla())
+	blue := Rgba(0, 0, 255, 255)
+	assertEqual(t, Hsla(240, 1, 0.5, 1), blue.ToHsla())
+}
+
+func TestHslToHsla(t *testing.T) {
+	hsla := Hsl(120, 0.3, 0.6)
+	assertEqual(t, Hsla(120, 0.3, 0.6, 1.0), hsla.ToHsla())
+}
+
+func TestHslaToHsla(t *testing.T) {
+	hsla := Hsla(120, 0.3, 0.6, 0.8)
+	assertEqual(t, hsla, hsla.ToHsla())
+}

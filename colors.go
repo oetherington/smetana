@@ -8,6 +8,7 @@ import (
 // A color value, suitable for use in CSS.
 type Color interface {
 	ToCssColor() string
+	ToHsla() HSLA
 }
 
 // Structure representing an RGB color. All values are unsigned from 0-255
@@ -26,6 +27,11 @@ func (c RGB) ToCssColor() string {
 // Create an [RGB] color.
 func Rgb(r uint8, g uint8, b uint8) RGB {
 	return RGB{r, g, b}
+}
+
+// Convert an [RGB] into an [HSLA]
+func (c RGB) ToHsla() HSLA {
+	return Rgba(c.R, c.G, c.B, 255).ToHsla()
 }
 
 // Convert a 7-digit hex string to an unsigned integer. It is the _callers_
@@ -85,6 +91,48 @@ func Rgba(r uint8, g uint8, b uint8, a uint8) RGBA {
 	return RGBA{r, g, b, a}
 }
 
+// Convert an [RGBA] into an [HSLA]
+func (c RGBA) ToHsla() HSLA {
+	r := float32(c.R) / 255.0
+	g := float32(c.G) / 255.0
+	b := float32(c.B) / 255.0
+	a := float32(c.A) / 255.0
+
+	l := max(max(r, g), b)
+	s := l - min(min(r, g), b)
+
+	var h float32
+	if s > 0 {
+		if l == r {
+			h = (g - b) / s
+		} else if l == g {
+			h = 2 + (b-r)/s
+		} else {
+			h = 4 + (r-g)/s
+		}
+	}
+
+	var H uint16
+	if 60*h < 0 {
+		H = uint16(60*h + 360)
+	} else {
+		H = uint16(60 * h)
+	}
+
+	var S float32
+	if s > 0 {
+		if l <= 0.5 {
+			S = s / (2*l - s)
+		} else {
+			S = s / (2 - (2*l - s))
+		}
+	}
+
+	L := l - s/2
+
+	return HSLA{H, S, L, a}
+}
+
 // Structure representing an HSL color. "H" is an unsigned value between 0-360
 // inclusive representing a position on the color wheel. 0 is red, 120 is
 // green, 240 is blue, and other colors are interpolated between. S is
@@ -109,6 +157,11 @@ func Hsl(h uint16, s float32, l float32) HSL {
 	return HSL{h, s, l}
 }
 
+// Convert an [HSL] into an [HSLA]
+func (c HSL) ToHsla() HSLA {
+	return HSLA{c.H, c.S, c.L, 1.0}
+}
+
 // Structure representing an HSL color plus as alpha channel. See [HSL] for
 // more info. The alpha is stored as a float between 0.0-1.0 inclusive. Also
 // see [Hsla].
@@ -129,4 +182,9 @@ func (c HSLA) ToCssColor() string {
 // Create an [HSL] color.
 func Hsla(h uint16, s float32, l float32, a float32) HSLA {
 	return HSLA{h, s, l, a}
+}
+
+// Convert an [HSLA] into an [HSLA]
+func (c HSLA) ToHsla() HSLA {
+	return c
 }
