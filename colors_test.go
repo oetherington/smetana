@@ -51,7 +51,16 @@ func TestHslaToCssColor(t *testing.T) {
 }
 
 func TestRgbToHsla(t *testing.T) {
-	// TODO
+	black := Rgb(0, 0, 0)
+	assertEqual(t, Hsla(0, 0, 0, 1), black.ToHsla())
+	white := Rgb(255, 255, 255)
+	assertEqual(t, Hsla(0, 0, 1, 1), white.ToHsla())
+	red := Rgb(255, 0, 0)
+	assertEqual(t, Hsla(0, 1, 0.5, 1), red.ToHsla())
+	green := Rgb(0, 255, 0)
+	assertEqual(t, Hsla(120, 1, 0.5, 1), green.ToHsla())
+	blue := Rgb(0, 0, 255)
+	assertEqual(t, Hsla(240, 1, 0.5, 1), blue.ToHsla())
 }
 
 func TestRgbaToHsla(t *testing.T) {
@@ -65,14 +74,66 @@ func TestRgbaToHsla(t *testing.T) {
 	assertEqual(t, Hsla(120, 1, 0.5, 1), green.ToHsla())
 	blue := Rgba(0, 0, 255, 255)
 	assertEqual(t, Hsla(240, 1, 0.5, 1), blue.ToHsla())
+	alpha := Rgba(0, 0, 255, 127)
+	assertEqual(t, Hsla(240, 1, 0.5, 0.49803922), alpha.ToHsla())
 }
 
 func TestHslToHsla(t *testing.T) {
-	hsla := Hsl(120, 0.3, 0.6)
-	assertEqual(t, Hsla(120, 0.3, 0.6, 1.0), hsla.ToHsla())
+	hsl := Hsl(120, 0.3, 0.6)
+	assertEqual(t, Hsla(120, 0.3, 0.6, 1.0), hsl.ToHsla())
 }
 
 func TestHslaToHsla(t *testing.T) {
 	hsla := Hsla(120, 0.3, 0.6, 0.8)
 	assertEqual(t, hsla, hsla.ToHsla())
+}
+
+func TestRgbToRgba(t *testing.T) {
+	rgb := Rgb(100, 40, 230)
+	assertEqual(t, Rgba(100, 40, 230, 255), rgb.ToRgba())
+}
+
+func TestRgbaToRgba(t *testing.T) {
+	rgba := Rgba(100, 40, 230, 120)
+	assertEqual(t, Rgba(100, 40, 230, 120), rgba.ToRgba())
+}
+
+func TestHslToRgba(t *testing.T) {
+	black := Hsl(0, 0, 0)
+	assertEqual(t, Rgba(0, 0, 0, 255), black.ToRgba())
+	white := Hsl(0, 0, 1)
+	assertEqual(t, Rgba(255, 255, 255, 255), white.ToRgba())
+	red := Hsl(0, 1, 0.5)
+	assertEqual(t, Rgba(255, 0, 0, 255), red.ToRgba())
+	green := Hsl(120, 1, 0.5)
+	assertEqual(t, Rgba(0, 255, 0, 255), green.ToRgba())
+	blue := Hsl(240, 1, 0.5)
+	assertEqual(t, Rgba(0, 0, 255, 255), blue.ToRgba())
+}
+
+func TestHslaToRgba(t *testing.T) {
+	black := Hsla(0, 0, 0, 1)
+	assertEqual(t, Rgba(0, 0, 0, 255), black.ToRgba())
+	white := Hsla(0, 0, 1, 1)
+	assertEqual(t, Rgba(255, 255, 255, 255), white.ToRgba())
+	red := Hsla(0, 1, 0.5, 1)
+	assertEqual(t, Rgba(255, 0, 0, 255), red.ToRgba())
+	green := Hsla(120, 1, 0.5, 1)
+	assertEqual(t, Rgba(0, 255, 0, 255), green.ToRgba())
+	blue := Hsla(240, 1, 0.5, 1)
+	assertEqual(t, Rgba(0, 0, 255, 255), blue.ToRgba())
+	alpha := Hsla(240, 1, 0.5, 0.49803922)
+	assertEqual(t, Rgba(0, 0, 255, 127), alpha.ToRgba())
+}
+
+func TestDarken(t *testing.T) {
+	value := Hsla(120, 0.5, 0.5, 1.0)
+	darkened := Darken(value, 0.1)
+	assertEqual(t, Hsla(120, 0.5, 0.45, 1.0), darkened)
+}
+
+func TestLighten(t *testing.T) {
+	value := Hsla(120, 0.5, 0.5, 1.0)
+	lightened := Lighten(value, 0.1)
+	assertEqual(t, Hsla(120, 0.5, 0.55, 1.0), lightened)
 }
