@@ -1,6 +1,7 @@
 package smetana
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -10,15 +11,26 @@ func TestCanRenderEmptyStyleSheet(t *testing.T) {
 	assertEqual(t, "", RenderCss(styles))
 }
 
-func TestCanValidateFontExtensions(t *testing.T) {
-	assertEqual(t, true, isValidFontExtension(".ttf"))
-	assertEqual(t, true, isValidFontExtension(".woff"))
-	assertEqual(t, true, isValidFontExtension(".woff2"))
-	assertEqual(t, true, isValidFontExtension(".otf"))
-	assertEqual(t, false, isValidFontExtension(".txt"))
-	assertEqual(t, false, isValidFontExtension(".png"))
-	assertEqual(t, false, isValidFontExtension(".html"))
-	assertEqual(t, false, isValidFontExtension(".go"))
+func TestCanConvertFontNameToExtension(t *testing.T) {
+	fmt, err := fontUrlToFormat("a.ttf")
+	assertEqual(t, err, nil)
+	assertEqual(t, fmt, "truetype")
+
+	fmt, err = fontUrlToFormat("a.otf")
+	assertEqual(t, err, nil)
+	assertEqual(t, fmt, "opentype")
+
+	fmt, err = fontUrlToFormat("a.woff")
+	assertEqual(t, err, nil)
+	assertEqual(t, fmt, "woff")
+
+	fmt, err = fontUrlToFormat("a.woff2")
+	assertEqual(t, err, nil)
+	assertEqual(t, fmt, "woff2")
+
+	fmt, err = fontUrlToFormat("a.png")
+	assertEqual(t, fmt, "")
+	assertEqual(t, err, errors.New("Invalid font URL: a.png"))
 }
 
 func TestCanAddARawCssString(t *testing.T) {
@@ -32,7 +44,7 @@ func TestCanAddFontFace(t *testing.T) {
 	font := styles.AddFont("OpenSans", "OpenSans.ttf", "OpenSans.woff2")
 	assertEqual(t, "OpenSans", font)
 	css := RenderCss(styles)
-	expected := "@font-face{font-family:OpenSans;src:url(OpenSans.ttf)format('ttf'),url(OpenSans.woff2)format('woff2');}"
+	expected := "@font-face{font-family:OpenSans;src:url(OpenSans.ttf)format('truetype'),url(OpenSans.woff2)format('woff2');}"
 	assertEqual(t, expected, css)
 }
 

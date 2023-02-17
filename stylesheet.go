@@ -43,8 +43,19 @@ type StyleSheetFontFace struct {
 	Srcs   []string
 }
 
-func isValidFontExtension(ext string) bool {
-	return ext == ".ttf" || ext == ".woff" || ext == ".woff2" || ext == ".otf"
+func fontUrlToFormat(url string) (string, error) {
+	ext := filepath.Ext(url)
+	switch ext {
+	case ".ttf":
+		return "truetype", nil
+	case ".otf":
+		return "opentype", nil
+	case ".woff":
+		return "woff", nil
+	case ".woff2":
+		return "woff2", nil
+	}
+	return "", fmt.Errorf("Invalid font URL: %s", url)
 }
 
 // Convert a [StyleSheetFontFace] into a CSS string.
@@ -59,11 +70,10 @@ func (font StyleSheetFontFace) ToCss(builder *Builder) {
 		builder.Buf.WriteString("url(")
 		builder.Buf.WriteString(src)
 		builder.Buf.WriteString(")format('")
-		ext := filepath.Ext(src)
-		if isValidFontExtension(ext) {
-			builder.Buf.WriteString(ext[1:])
+		format, err := fontUrlToFormat(src)
+		if err == nil {
+			builder.Buf.WriteString(format)
 		} else {
-			err := fmt.Errorf("Invalid extension for font '%s'", src)
 			builder.Logger.Panicln(err)
 		}
 		builder.Buf.WriteString("')")
