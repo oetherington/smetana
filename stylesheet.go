@@ -138,13 +138,18 @@ func (styles *StyleSheet) AddFont(family string, srcs ...string) string {
 }
 
 // Add a new class to a [StyleSheet].
-func (styles *StyleSheet) AddClass(props CssProps) ClassName {
-	name := ClassName(RandomString(8))
+func (styles *StyleSheet) AddClass(name ClassName, props CssProps) ClassName {
 	styles.Elements = append(styles.Elements, StyleSheetBlock{
 		fmt.Sprintf(".%s", name),
 		props,
 	})
 	return name
+}
+
+// Add a new class to a [StyleSheet] with a random name.
+func (styles *StyleSheet) AddAnonClass(props CssProps) ClassName {
+	name := ClassName(RandomString(8))
+	return styles.AddClass(name, props)
 }
 
 // Add a new block to a [StyleSheet].

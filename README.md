@@ -186,7 +186,7 @@ compiled into a CSS string with `RenderCss(styles)`.
 
 You can then add classes to the stylesheet with
 ```go
-container := styles.addClass(CssProps{
+container := styles.addClass("container", CssProps{
 	"cursor": "pointer",
 })
 ```
@@ -202,8 +202,18 @@ which will render to
 ```html
 <div class="container">Hello world</div>
 ```
-Note that the name of the class will actually be a random string, not the word
-"container".
+and
+```css
+.container{cursor:pointer}
+```
+
+If you don't require class names to be stable between builds then you can
+generate a random class name with `addAnonClass`:
+```go
+container := styles.addAnonClass(CssProps{
+	"cursor": "pointer",
+})
+```
 
 To use arbitrary CSS selectors you can instead use `AddBlock`:
 ```go

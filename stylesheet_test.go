@@ -38,10 +38,10 @@ func TestCanAddFontFace(t *testing.T) {
 
 func TestCanAddClassWithStringProp(t *testing.T) {
 	styles := NewStyleSheet()
-	class := styles.AddClass(CssProps{
+	class := styles.AddClass("container", CssProps{
 		"cursor": "pointer",
 	})
-	assertEqual(t, 8, len(class))
+	assertEqual(t, "container", class)
 	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), RenderCss(styles))
 }
 
@@ -55,20 +55,29 @@ func (prop CustomProp) String() string {
 
 func TestCanAddClassWithCustomStringerProp(t *testing.T) {
 	styles := NewStyleSheet()
-	class := styles.AddClass(CssProps{
+	class := styles.AddClass("container", CssProps{
 		"padding": CustomProp{4},
 	})
-	assertEqual(t, 8, len(class))
+	assertEqual(t, "container", class)
 	assertEqual(t, fmt.Sprintf(".%s{padding:8;}", class), RenderCss(styles))
 }
 
 func TestCanAddClassWithIntProp(t *testing.T) {
 	styles := NewStyleSheet()
-	class := styles.AddClass(CssProps{
+	class := styles.AddClass("container", CssProps{
 		"margin": 10,
 	})
-	assertEqual(t, 8, len(class))
+	assertEqual(t, "container", class)
 	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), RenderCss(styles))
+}
+
+func TestCanAddAnonClass(t *testing.T) {
+	styles := NewStyleSheet()
+	class := styles.AddAnonClass(CssProps{
+		"cursor": "pointer",
+	})
+	assertEqual(t, 8, len(class))
+	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), RenderCss(styles))
 }
 
 func TestCanAddBlock(t *testing.T) {
