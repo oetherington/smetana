@@ -74,7 +74,7 @@ func (font StyleSheetFontFace) ToCss(builder *Builder) {
 		if err == nil {
 			builder.Buf.WriteString(format)
 		} else {
-			builder.Logger.Panicln(err)
+			builder.Logger.Println(err)
 		}
 		builder.Buf.WriteString("')")
 	}
