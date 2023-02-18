@@ -14,7 +14,14 @@ func TestRenderEmptyFragmentNode(t *testing.T) {
 	assertEqual(t, "", result)
 }
 
-func TestCanAppendChildrenToFragment(t *testing.T) {
+func TestCanAppendChildrenToEmptyFragment(t *testing.T) {
+	node := Fragment()
+	node.AssignChildren([]Node{Div("Bar")})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div>Bar</div>", result)
+}
+
+func TestCanAppendChildrenToNonEmptyFragment(t *testing.T) {
 	node := Fragment(Span("Foo"))
 	node.AssignChildren([]Node{Div("Bar")})
 	result := RenderHtmlOpts(node, true, nil)
