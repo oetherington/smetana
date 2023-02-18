@@ -125,8 +125,8 @@ type StyleSheet struct {
 }
 
 // Create a new empty [StyleSheet].
-func NewStyleSheet() StyleSheet {
-	return StyleSheet{[]StyleSheetElement{}}
+func NewStyleSheet(elements ...StyleSheetElement) StyleSheet {
+	return StyleSheet{elements}
 }
 
 // Add a raw CSS string to the [StyleSheet]

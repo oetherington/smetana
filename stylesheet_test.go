@@ -11,6 +11,17 @@ func TestCanRenderEmptyStyleSheet(t *testing.T) {
 	assertEqual(t, "", RenderCss(styles))
 }
 
+func TestCanCreateStyleSheetWithInitialElements(t *testing.T) {
+	css := `
+		body {
+			padding: 3em;
+			background: #ddd;
+		}
+	`
+	styles := NewStyleSheet(StyleSheetCss(css))
+	assertEqual(t, css, RenderCss(styles))
+}
+
 func TestCanConvertFontNameToExtension(t *testing.T) {
 	fmt, err := fontUrlToFormat("a.ttf")
 	assertEqual(t, err, nil)
