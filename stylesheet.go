@@ -32,6 +32,11 @@ type StyleSheetElement interface {
 // Raw CSS type implementing [StyleSheetElement].
 type StyleSheetCss string
 
+// Create a [StyleSheetCss] [StyleSheetElement].
+func StylesCss(css string) StyleSheetCss {
+	return StyleSheetCss(css)
+}
+
 // Convert [StyleSheetCSS] into a CSS string.
 func (css StyleSheetCss) ToCss(builder *Builder) {
 	builder.Buf.WriteString(string(css))
@@ -41,6 +46,11 @@ func (css StyleSheetCss) ToCss(builder *Builder) {
 type StyleSheetFontFace struct {
 	Family string
 	Srcs   []string
+}
+
+// Create a [StyleSheetFontFace] [StyleSheetElement].
+func StylesFontFace(family string, srcs ...string) StyleSheetFontFace {
+	return StyleSheetFontFace{family, srcs}
 }
 
 func fontUrlToFormat(url string) (string, error) {
@@ -87,6 +97,11 @@ type StyleSheetBlock struct {
 	Props    CssProps
 }
 
+// Create a [StyleSheetBlock] [StyleSheetElement].
+func StylesBlock(selector string, props CssProps) StyleSheetBlock {
+	return StyleSheetBlock{selector, props}
+}
+
 // Convert a [StyleSheetClass] into a CSS string.
 func (block StyleSheetBlock) ToCss(builder *Builder) {
 	builder.Buf.WriteString(block.Selector)
@@ -125,8 +140,8 @@ type StyleSheet struct {
 }
 
 // Create a new empty [StyleSheet].
-func NewStyleSheet() StyleSheet {
-	return StyleSheet{[]StyleSheetElement{}}
+func NewStyleSheet(elements ...StyleSheetElement) StyleSheet {
+	return StyleSheet{elements}
 }
 
 // Add a raw CSS string to the [StyleSheet]

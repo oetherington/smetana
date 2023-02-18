@@ -6,9 +6,38 @@ import (
 	"testing"
 )
 
+func TestCanCreateStylesCss(t *testing.T) {
+	str := "body{padding:5px;}"
+	css := StylesCss(str)
+	assertEqual(t, str, string(css))
+}
+
+func TestCanCreateStylesFontFace(t *testing.T) {
+	font := StylesFontFace("OpenSans", "OpenSans.ttf")
+	expected := StyleSheetFontFace{"OpenSans", []string{"OpenSans.ttf"}}
+	assertEqual(t, expected, font)
+}
+
+func TestCanCreateStylesBlock(t *testing.T) {
+	block := StylesBlock("body", CssProps{"background": "red"})
+	expected := StyleSheetBlock{"body", CssProps{"background": "red"}}
+	assertEqual(t, expected, block)
+}
+
 func TestCanRenderEmptyStyleSheet(t *testing.T) {
 	styles := NewStyleSheet()
 	assertEqual(t, "", RenderCss(styles))
+}
+
+func TestCanCreateStyleSheetWithInitialElements(t *testing.T) {
+	css := `
+		body {
+			padding: 3em;
+			background: #ddd;
+		}
+	`
+	styles := NewStyleSheet(StylesCss(css))
+	assertEqual(t, css, RenderCss(styles))
 }
 
 func TestCanConvertFontNameToExtension(t *testing.T) {

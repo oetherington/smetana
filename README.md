@@ -221,6 +221,25 @@ styles.AddBlock("body", CssProps{"background": "red"})
 styles.AddBlock(".container > div", CssProps{"display": "flex"})
 ```
 
+`NewStyleSheet` is also a variadic function which can take an arbitrary
+number of `StyleSheetElement`s (the building blocks that make up a stylesheet).
+This can be useful for cleanly adding global styles without using `AddBlock`:
+```go
+styles := NewStyleSheet(
+	StylesCss(`
+		body {
+			padding: 3em;
+		}
+		p {
+			font-family: sans-serif;
+		}
+	`),
+	StylesBlock("div", CssProps{
+		"border-radius": PX(5),
+	}),
+)
+```
+
 #### Using colors
 
 Instead of entering CSS color strings by hand, Smetana provides several helper
