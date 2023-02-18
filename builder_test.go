@@ -18,6 +18,22 @@ func TestWriteOpeningTag(t *testing.T) {
 	assertEqual(t, "<div foo=\"bar\" hello=\"world\">", result)
 }
 
+func TestWriteOpeningTagWithNonDeterministicAttributes(t *testing.T) {
+	tag := "div"
+	attrs := Attrs{
+		"foo":   "bar",
+		"hello": "world",
+	}
+	builder := Builder{strings.Builder{}, false, nil}
+	builder.writeOpeningTag(tag, attrs)
+	result := builder.Buf.String()
+	if result[5] == 'f' {
+		assertEqual(t, "<div foo=\"bar\" hello=\"world\">", result)
+	} else {
+		assertEqual(t, "<div hello=\"world\" foo=\"bar\">", result)
+	}
+}
+
 func TestWriteClosingTag(t *testing.T) {
 	tag := "span"
 	builder := Builder{strings.Builder{}, true, nil}

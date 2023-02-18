@@ -236,6 +236,16 @@ Aside from `RGB`, there are also helpers for `RGBA`, `HSL` and `HSLA`.
 The `Hex` function will create an `RGB` color from a 4-digit or 7-digit CSS
 hex color string, such as `#ab4` or `#FF00FF`.
 
+For easier manipulation, all colors have `ToHsla()` and `ToRgba()` methods.
+
+Colors can also be lightened or darkened by a certain amount with the `Lighten`
+and `Darken` functions:
+```go
+red := Rgb(255, 0, 0)
+darkerRed := Darken(red, 0.4)
+lighterRed := Lighten(red, 0.4)
+```
+
 #### Adding units
 
 Helpers are also provided to strongly type CSS units. For example,
