@@ -225,14 +225,19 @@ styles.AddBlock(".container > div", CssProps{"display": "flex"})
 number of `StyleSheetElement`s (the building blocks that make up a stylesheet).
 This can be useful for cleanly adding global styles without using `AddBlock`:
 ```go
-styles := NewStyleSheet(StyleSheetCss(`
-	body {
-		padding: 3em;
-	}
-	p {
-		font-family: sans-serif;
-	}
-`))
+styles := NewStyleSheet(
+	StylesCss(`
+		body {
+			padding: 3em;
+		}
+		p {
+			font-family: sans-serif;
+		}
+	`),
+	StylesBlock("div", CssProps{
+		"border-radius": PX(5),
+	}),
+)
 ```
 
 #### Using colors
