@@ -30,4 +30,4 @@ release:
 	if [ -z ${VERSION} ]; then exit 1; else echo "Using version ${VERSION}"; fi
 	git tag ${VERSION}
 	git push origin ${VERSION}
-	GOPROXY=proxy.golang.org go list -m github.com/oetherington.smetana@${VERSION}
+	GOPROXY=proxy.golang.org go list -m github.com/oetherington/smetana@${VERSION}
