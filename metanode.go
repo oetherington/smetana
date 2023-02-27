@@ -9,7 +9,8 @@ type MetaNode struct {
 
 // Convert a [MetaNode] to HTML
 func (node MetaNode) ToHtml(builder *Builder) {
-	builder.writeShortTag("meta", Attrs{
+	// `meta` is a void tag so we only need the opening tag
+	builder.writeOpeningTag("meta", Attrs{
 		"name":    node.Name,
 		"content": node.Content,
 	})

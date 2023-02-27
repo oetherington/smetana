@@ -19,12 +19,12 @@ func (node DomNode) ToHtml(builder *Builder) {
 		}
 	}
 
-	if len(node.Children) > 0 {
+	if isVoidTag(node.Tag) {
+		builder.writeOpeningTag(node.Tag, node.Attrs)
+	} else {
 		builder.writeOpeningTag(node.Tag, node.Attrs)
 		builder.writeChildren(node.Children)
 		builder.writeClosingTag(node.Tag)
-	} else {
-		builder.writeShortTag(node.Tag, node.Attrs)
 	}
 }
 

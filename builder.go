@@ -60,13 +60,6 @@ func (builder *Builder) writeClosingTag(tag Tag) {
 	builder.Buf.WriteByte('>')
 }
 
-func (builder *Builder) writeShortTag(tag Tag, attrs Attrs) {
-	builder.Buf.WriteByte('<')
-	builder.Buf.WriteString(tag)
-	builder.writeAttrs(attrs)
-	builder.Buf.WriteString(" />")
-}
-
 func (builder *Builder) writeChildren(children Children) {
 	for _, child := range children {
 		child.ToHtml(builder)

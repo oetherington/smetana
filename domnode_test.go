@@ -9,7 +9,13 @@ import (
 func TestRenderDomNodeWithAttributes(t *testing.T) {
 	node := NewDomNode("div", []any{Attrs{"class": "foo"}})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div class=\"foo\" />", result)
+	assertEqual(t, "<div class=\"foo\"></div>", result)
+}
+
+func TestRenderVoidDomNodeWithAttributes(t *testing.T) {
+	node := NewDomNode("hr", []any{Attrs{"class": "foo"}})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<hr class=\"foo\">", result)
 }
 
 func TestRenderDomNodeWithChildren(t *testing.T) {
@@ -21,7 +27,7 @@ func TestRenderDomNodeWithChildren(t *testing.T) {
 func TestRenderDomNodeWithSingleAttribute(t *testing.T) {
 	node := NewDomNode("div", []any{Attr{"foo", "bar"}})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div foo=\"bar\" />", result)
+	assertEqual(t, "<div foo=\"bar\"></div>", result)
 }
 
 func TestRenderDomNodeWithSingleChild(t *testing.T) {
@@ -33,53 +39,53 @@ func TestRenderDomNodeWithSingleChild(t *testing.T) {
 func TestRenderDomNodeWithClasses(t *testing.T) {
 	node := NewDomNode("div", []any{Classes{"foo": true, "bar": false}})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div class=\"foo\" />", result)
+	assertEqual(t, "<div class=\"foo\"></div>", result)
 }
 
 func TestRenderDomNodeWithClassName(t *testing.T) {
 	node := NewDomNode("div", []any{ClassName("foo")})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div class=\"foo\" />", result)
+	assertEqual(t, "<div class=\"foo\"></div>", result)
 }
 
 func TestRenderDomNodeWithStrings(t *testing.T) {
 	node := NewDomNode("div", []any{Classes{"a": true}})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div class=\"a\" />", result)
+	assertEqual(t, "<div class=\"a\"></div>", result)
 }
 
 func TestRenderDomNodeWithNil(t *testing.T) {
 	node := NewDomNode("div", []any{nil})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div />", result)
+	assertEqual(t, "<div></div>", result)
 }
 
 func TestAssigningDomNodeChildren(t *testing.T) {
 	node := NewDomNode("div", []any{})
 	node.AssignChildren([]Node{NewDomNode("div", []any{})})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div><div /></div>", result)
+	assertEqual(t, "<div><div></div></div>", result)
 }
 
 func TestAppendingDomNodeChildren(t *testing.T) {
 	node := NewDomNode("div", []any{Span()})
 	node.AssignChildren([]Node{NewDomNode("div", []any{})})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div><span /><div /></div>", result)
+	assertEqual(t, "<div><span></span><div></div></div>", result)
 }
 
 func TestAssigningDomNodeAttrs(t *testing.T) {
 	node := NewDomNode("div", []any{})
 	node.AssignAttrs(Attrs{"class": "foo"})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div class=\"foo\" />", result)
+	assertEqual(t, "<div class=\"foo\"></div>", result)
 }
 
 func TestAppendingDomNodeAttrs(t *testing.T) {
 	node := NewDomNode("div", []any{Attrs{"aria-label": "bar"}})
 	node.AssignAttrs(Attrs{"class": "foo"})
 	result := RenderHtmlOpts(node, true, nil)
-	assertEqual(t, "<div aria-label=\"bar\" class=\"foo\" />", result)
+	assertEqual(t, "<div aria-label=\"bar\" class=\"foo\"></div>", result)
 }
 
 func TestDomNodeReportsErrors(t *testing.T) {
@@ -87,7 +93,7 @@ func TestDomNodeReportsErrors(t *testing.T) {
 	var target strings.Builder
 	logger := log.New(&target, "", 0)
 	result := RenderHtmlOpts(node, true, logger)
-	assertEqual(t, "<div />", result)
+	assertEqual(t, "<div></div>", result)
 	output := strings.TrimSpace(target.String())
 	assertEqual(t, "Invalid DomNode argument: 3", output)
 }
@@ -106,20 +112,20 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		},
 		{Abbr(Text("foo")), "<abbr>foo</abbr>"},
 		{Address(Text("foo")), "<address>foo</address>"},
-		{Area(Text("foo")), "<area>foo</area>"},
+		{Area(), "<area>"},
 		{Article(Text("foo")), "<article>foo</article>"},
 		{Aside(Text("foo")), "<aside>foo</aside>"},
 		{Audio(Text("foo")), "<audio>foo</audio>"},
 		{B(Text("foo")), "<b>foo</b>"},
-		{Base(Text("foo")), "<base>foo</base>"},
+		{Base(), "<base>"},
 		{
 			BaseHref("https://example.com/"),
-			"<base href=\"https://example.com/\" target=\"_blank\" />",
+			"<base href=\"https://example.com/\" target=\"_blank\">",
 		},
 		{Bdi(Text("foo")), "<bdi>foo</bdi>"},
 		{Bdo(Text("foo")), "<bdo>foo</bdo>"},
 		{Blockquote(Text("foo")), "<blockquote>foo</blockquote>"},
-		{Br(), "<br />"},
+		{Br(), "<br>"},
 		{Button(Text("foo")), "<button>foo</button>"},
 		{Canvas(Text("foo")), "<canvas>foo</canvas>"},
 		{Caption(Text("foo")), "<caption>foo</caption>"},
@@ -127,11 +133,11 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 			Body(Attrs{"class": "foo"}, Children{Text("bar")}),
 			"<body class=\"foo\">bar</body>",
 		},
-		{Charset("ASCII"), "<meta charset=\"ASCII\" />"},
-		{Charset(""), "<meta charset=\"UTF-8\" />"},
+		{Charset("ASCII"), "<meta charset=\"ASCII\">"},
+		{Charset(""), "<meta charset=\"UTF-8\">"},
 		{Cite(Text("foo")), "<cite>foo</cite>"},
 		{Code(Text("foo")), "<code>foo</code>"},
-		{Col(Text("foo")), "<col>foo</col>"},
+		{Col(), "<col>"},
 		{Colgroup(Text("foo")), "<colgroup>foo</colgroup>"},
 		{Data(Text("foo")), "<data>foo</data>"},
 		{Datalist(Text("foo")), "<datalist>foo</datalist>"},
@@ -147,7 +153,7 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{Dl(Text("foo")), "<dl>foo</dl>"},
 		{Dt(Text("foo")), "<dt>foo</dt>"},
 		{Em(Text("foo")), "<em>foo</em>"},
-		{Embed(Text("foo")), "<embed>foo</embed>"},
+		{Embed(), "<embed>"},
 		{Fieldset(Text("foo")), "<fieldset>foo</fieldset>"},
 		{Figcaption(Text("foo")), "<figcaption>foo</figcaption>"},
 		{Figure(Text("foo")), "<figure>foo</figure>"},
@@ -167,20 +173,20 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{H6(Text("foo")), "<h6>foo</h6>"},
 		{Head(Text("foo")), "<head>foo</head>"},
 		{Header(Text("foo")), "<header>foo</header>"},
-		{Hr(Text("foo")), "<hr>foo</hr>"},
+		{Hr(), "<hr>"},
 		{I(Text("foo")), "<i>foo</i>"},
 		{Iframe(Text("foo")), "<iframe>foo</iframe>"},
-		{Img(Text("foo")), "<img>foo</img>"},
-		{Input(Text("foo")), "<input>foo</input>"},
+		{Img(), "<img>"},
+		{Input(), "<input>"},
 		{Ins(Text("foo")), "<ins>foo</ins>"},
 		{Kbd(Text("foo")), "<kbd>foo</kbd>"},
 		{Label(Text("foo")), "<label>foo</label>"},
 		{Legend(Text("foo")), "<legend>foo</legend>"},
 		{Li(Text("foo")), "<li>foo</li>"},
-		{Link(Text("foo")), "<link>foo</link>"},
+		{Link(), "<link>"},
 		{
 			LinkHref("stylesheet", "/main.css"),
-			"<link href=\"/main.css\" rel=\"stylesheet\" />",
+			"<link href=\"/main.css\" rel=\"stylesheet\">",
 		},
 		{Main(Text("foo")), "<main>foo</main>"},
 		{Map(Text("foo")), "<map>foo</map>"},
@@ -205,11 +211,11 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{S(Text("foo")), "<s>foo</s>"},
 		{Samp(Text("foo")), "<samp>foo</samp>"},
 		{Script("alert('foo')"), "<script>alert('foo')</script>"},
-		{ScriptSrc("/main.js"), "<script src=\"/main.js\" />"},
+		{ScriptSrc("/main.js"), "<script src=\"/main.js\"></script>"},
 		{Section(Text("foo")), "<section>foo</section>"},
 		{Select(Text("foo")), "<select>foo</select>"},
 		{Small(Text("foo")), "<small>foo</small>"},
-		{Source(Text("foo")), "<source>foo</source>"},
+		{Source(), "<source>"},
 		{Span(Text("foo")), "<span>foo</span>"},
 		{Strong(Text("foo")), "<strong>foo</strong>"},
 		{Style("body{background:red}"), "<style>body{background:red}</style>"},
@@ -228,12 +234,12 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 		{Time(Text("foo")), "<time>foo</time>"},
 		{Title("hello world"), "<title>hello world</title>"},
 		{Tr(Text("foo")), "<tr>foo</tr>"},
-		{Track(Text("foo")), "<track>foo</track>"},
+		{Track(), "<track>"},
 		{U(Text("foo")), "<u>foo</u>"},
 		{Ul(Text("foo")), "<ul>foo</ul>"},
 		{Var(Text("foo")), "<var>foo</var>"},
 		{Video(Text("foo")), "<video>foo</video>"},
-		{Wbr(Text("foo")), "<wbr>foo</wbr>"},
+		{Wbr(), "<wbr>"},
 	}
 
 	for _, testCase := range testCases {
