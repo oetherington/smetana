@@ -49,16 +49,37 @@ func TestRenderDomNodeWithStrings(t *testing.T) {
 }
 
 func TestRenderDomNodeWithNil(t *testing.T) {
-	node := NewDomNode("div", nil)
+	node := NewDomNode("div", []any{nil})
 	result := RenderHtmlOpts(node, true, nil)
 	assertEqual(t, "<div />", result)
 }
 
-func TestAppendingDomNodeChildren(t *testing.T) {
+func TestAssigningDomNodeChildren(t *testing.T) {
 	node := NewDomNode("div", []any{})
 	node.AssignChildren([]Node{NewDomNode("div", []any{})})
 	result := RenderHtmlOpts(node, true, nil)
 	assertEqual(t, "<div><div /></div>", result)
+}
+
+func TestAppendingDomNodeChildren(t *testing.T) {
+	node := NewDomNode("div", []any{Span()})
+	node.AssignChildren([]Node{NewDomNode("div", []any{})})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div><span /><div /></div>", result)
+}
+
+func TestAssigningDomNodeAttrs(t *testing.T) {
+	node := NewDomNode("div", []any{})
+	node.AssignAttrs(Attrs{"class": "foo"})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div class=\"foo\" />", result)
+}
+
+func TestAppendingDomNodeAttrs(t *testing.T) {
+	node := NewDomNode("div", []any{Attrs{"aria-label": "bar"}})
+	node.AssignAttrs(Attrs{"class": "foo"})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div aria-label=\"bar\" class=\"foo\" />", result)
 }
 
 func TestDomNodeReportsErrors(t *testing.T) {
