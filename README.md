@@ -60,7 +60,7 @@ can be rendered with `RenderHtml(html)` to produce the following HTML string:
 <html>
 	<head>
 		<title>My HTML Document</title>
-		<meta charset="UTF-8" />
+		<meta charset="UTF-8">
 		<link rel="stylesheet" href="/styles/index.css">
 	</head>
 	<body>
@@ -99,7 +99,11 @@ use-cases:
  - `func H(level int, args ...any) DomNode` builds a header tag from `<h1>` to
    `<h6>` with the given level.
  - `func LinkHref(rel string, href string)` builds a `<link>` tag with the
-   given rel and URL.
+   given rel and URL attributes.
+ - `func LinkStylesheet(href string)` builds a `<link>` tag with
+   `rel="stylesheet"` and the given URL attribute.
+ - `func LinkStylesheetMedia(href string, media string)` builds a `<link>` tag
+   with `rel="stylesheet"` and the given URL and media attributes.
  - `func ScriptSrc(src string) DomNode` builds a `<script>` tag with the given
    src.
 
