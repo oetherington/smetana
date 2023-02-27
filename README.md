@@ -339,6 +339,37 @@ styles := NewStyleSheet()
 styles.AddCss("@media only screen and (max-width:600px) {body{width:100%;}}")
 ```
 
+### Sitemaps
+
+Smetana can also generate [XML sitemaps](https://www.sitemaps.org/protocol.html).
+
+Simply construct an array of `SitemapLocation` structs using the provided
+constructors then call `RenderSitemap` to get an XML string:
+```go
+sitemap := Sitemap{
+	SitemapLocationUrl("https://duckduckgo.com"),
+	SitemapLocationMod("https://lobste.rs", time.Unix(1243744874, 0)),
+	NewSitemapLocation(
+		"https://news.ycombinator.com",
+		time.Unix(1243944874, 0),
+		ChangeFreqAlways,
+		0.9,
+	),
+}
+resultXml := RenderSitemap(sitemap)
+```
+
+The constructors are as follows:
+ - `SitemapLocationUrl` takes only a URL.
+ - `SitemapLocationMod` takes a URL and a last modified date.
+ - `NewSitemapLocation` takes a URL, a last modified date, a change frequency
+   and a priority.
+
+The URL is a `string`, the modified date is a `time.Time`, the change frequency
+is one of `ChangeFreqNone`, `ChangeFreqAlways`, `ChangeFreqHourly`,
+`ChangeFreqDaily`, `ChangeFreqWeekly`, `ChangeFreqMonthly`, `ChangeFreqYearly`
+or `ChangeFreqNever`, and the priority is a `float64` between 0 and 1 inclusive.
+
 ## License
 
 Smetana is free software under the MIT license.
