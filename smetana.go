@@ -143,3 +143,22 @@ func clamp[T ordered](value T, min T, max T) T {
 	}
 	return value
 }
+
+// Transform an array using a given function. This is equivalent to `map` in
+// Haskell or Javascript. For example:
+//
+//	Xform([]int32{1, -2, 3}, func(a int32) uint32 {
+//		if a < 0 {
+//			a = -a
+//	 	}
+//	 	return uint32(a)
+//	 })
+//
+// will return []uint32{1, 2, 3}.
+func Xform[A any, B any](values []A, xform func(a A) B) []B {
+	out := make([]B, len(values))
+	for i, value := range values {
+		out[i] = xform(value)
+	}
+	return out
+}

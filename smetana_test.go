@@ -73,3 +73,14 @@ func TestClamp(t *testing.T) {
 	assertEqual(t, 10, clamp(5, 10, 20))
 	assertEqual(t, 20, clamp(20, 10, 20))
 }
+
+func TestXform(t *testing.T) {
+	values := []int32{1, -2, 3}
+	result := Xform(values, func(a int32) uint32 {
+		if a < 0 {
+			a = -a
+		}
+		return uint32(a)
+	})
+	assertEqual(t, []uint32{1, 2, 3}, result);
+}
