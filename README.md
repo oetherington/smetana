@@ -148,6 +148,21 @@ node := Fragment(
 );
 ```
 
+#### Transforming arrays
+
+It's common to need to apply some operation to an array of data to turn it into
+an array of DOM nodes. For this purpose, Smetana has a utility function called
+`Xform` that functions similarly to `map` in Haskell or Javascript.
+
+```go
+titles := []string{"Foo", "Bar", "Baz"}
+node := Div(
+	Xform(titles, func (title string) Node {
+		return H1(title)
+	}),
+)
+```
+
 #### Text nodes
 
 Raw text inside of a tag is implemented by the `TextNode` struct. You should
