@@ -348,10 +348,10 @@ constructors then call `RenderSitemap` to get an XML string:
 ```go
 sitemap := Sitemap{
 	SitemapLocationUrl("https://duckduckgo.com"),
-	SitemapLocationMod("https://lobste.rs", time.Unix(1243744874, 0)),
+	SitemapLocationMod("https://lobste.rs", time.Now()),
 	NewSitemapLocation(
 		"https://news.ycombinator.com",
-		time.Unix(1243944874, 0),
+		time.Now(),
 		ChangeFreqAlways,
 		0.9,
 	),
