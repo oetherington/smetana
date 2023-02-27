@@ -82,5 +82,5 @@ func TestXform(t *testing.T) {
 		}
 		return uint32(a)
 	})
-	assertEqual(t, []uint32{1, 2, 3}, result);
+	assertEqual(t, []uint32{1, 2, 3}, result)
 }
