@@ -88,6 +88,8 @@ func NewDomNode(tag Tag, args []any) DomNode {
 			node.Attrs["class"] = string(ClassNames(node.Attrs["class"], value))
 		case string:
 			node.Children = append(node.Children, Text(value))
+		case nil:
+			break
 		default:
 			node.appendError(fmt.Errorf("Invalid DomNode argument: %v", arg))
 		}

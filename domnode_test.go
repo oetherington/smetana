@@ -48,6 +48,12 @@ func TestRenderDomNodeWithStrings(t *testing.T) {
 	assertEqual(t, "<div class=\"a\" />", result)
 }
 
+func TestRenderDomNodeWithNil(t *testing.T) {
+	node := NewDomNode("div", nil)
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div />", result)
+}
+
 func TestAppendingDomNodeChildren(t *testing.T) {
 	node := NewDomNode("div", []any{})
 	node.AssignChildren([]Node{NewDomNode("div", []any{})})
