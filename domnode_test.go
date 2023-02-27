@@ -188,6 +188,14 @@ func TestRenderIndividualDomNodes(t *testing.T) {
 			LinkHref("stylesheet", "/main.css"),
 			"<link href=\"/main.css\" rel=\"stylesheet\">",
 		},
+		{
+			LinkStylesheet("/main.css"),
+			"<link href=\"/main.css\" rel=\"stylesheet\">",
+		},
+		{
+			LinkStylesheetMedia("/main.css", "print"),
+			"<link href=\"/main.css\" media=\"print\" rel=\"stylesheet\">",
+		},
 		{Main(Text("foo")), "<main>foo</main>"},
 		{Map(Text("foo")), "<map>foo</map>"},
 		{Mark(Text("foo")), "<mark>foo</mark>"},

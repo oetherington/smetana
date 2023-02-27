@@ -425,6 +425,27 @@ func LinkHref(rel string, href string) DomNode {
 	return DomNode{"link", attrs, Children{}, nil}
 }
 
+// Create a `link` DOM node for a CSS stylesheet with the given `href`
+// attribute.
+func LinkStylesheet(href string) DomNode {
+	attrs := Attrs{
+		"rel":  "stylesheet",
+		"href": href,
+	}
+	return DomNode{"link", attrs, Children{}, nil}
+}
+
+// Create a `link` DOM node for a CSS stylesheet with the given `href`
+// and `media` attributes.
+func LinkStylesheetMedia(href string, media string) DomNode {
+	attrs := Attrs{
+		"rel":   "stylesheet",
+		"href":  href,
+		"media": media,
+	}
+	return DomNode{"link", attrs, Children{}, nil}
+}
+
 // Create a `main` DOM node. Arguments follow the semantics of [NewDomNode].
 func Main(args ...any) DomNode {
 	return NewDomNode("main", args)
