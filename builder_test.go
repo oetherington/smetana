@@ -42,18 +42,6 @@ func TestWriteClosingTag(t *testing.T) {
 	assertEqual(t, "</span>", result)
 }
 
-func TestWriteShortTag(t *testing.T) {
-	tag := "div"
-	attrs := Attrs{
-		"foo":   "bar",
-		"hello": "world",
-	}
-	builder := Builder{strings.Builder{}, true, nil}
-	builder.writeShortTag(tag, attrs)
-	result := builder.Buf.String()
-	assertEqual(t, "<div foo=\"bar\" hello=\"world\" />", result)
-}
-
 func TestCustomLogger(t *testing.T) {
 	var target strings.Builder
 	logger := log.New(&target, "", 0)

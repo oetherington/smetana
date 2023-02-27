@@ -12,7 +12,8 @@ type EquivNode struct {
 
 // Convert an [EquivNode] to HTML
 func (node EquivNode) ToHtml(builder *Builder) {
-	builder.writeShortTag("meta", Attrs{
+	// `meta` is a void tag so we only need the opening tag
+	builder.writeOpeningTag("meta", Attrs{
 		"http-equiv": node.Equiv,
 		"content":    node.Content,
 	})
