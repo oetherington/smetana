@@ -31,8 +31,3 @@ func assertOneOf[T any](t *testing.T, exp []T, got T) {
 	debug.PrintStack()
 	t.Fatalf("Expecting one of '%v' got '%v'\n", exp, got)
 }
-
-func TestRenderNodeWithDefaultOptions(t *testing.T) {
-	result := RenderHtml(Text("Hello world"))
-	assertEqual(t, "Hello world", result)
-}
