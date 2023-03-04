@@ -23,10 +23,15 @@ type CssProps map[string]any
 // The name of a CSS class.
 type ClassName string
 
-// Interface representing an abstract element to be inserted into a CSS.
-// [StyleSheet]
+// A palette for rendering a [Stylesheet] multiple times with different values.
+// This can be used, for instance, to create separate styles for light-mode
+// and dark-mode.
+type Palette map[string]fmt.Stringer
+
+// Interface representing an abstract element to be inserted into a CSS
+// [StyleSheet].
 type StyleSheetElement interface {
-	ToCss(builder *Builder)
+	ToCss(builder *Builder, palette Palette)
 }
 
 // Raw CSS type implementing [StyleSheetElement].
@@ -38,7 +43,7 @@ func StylesCss(css string) StyleSheetCss {
 }
 
 // Convert [StyleSheetCSS] into a CSS string.
-func (css StyleSheetCss) ToCss(builder *Builder) {
+func (css StyleSheetCss) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(string(css))
 }
 
@@ -69,7 +74,7 @@ func fontUrlToFormat(url string) (string, error) {
 }
 
 // Convert a [StyleSheetFontFace] into a CSS string.
-func (font StyleSheetFontFace) ToCss(builder *Builder) {
+func (font StyleSheetFontFace) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString("@font-face{font-family:")
 	builder.Buf.WriteString(font.Family)
 	builder.Buf.WriteString(";src:")
@@ -103,7 +108,7 @@ func StylesBlock(selector string, props CssProps) StyleSheetBlock {
 }
 
 // Convert a [StyleSheetClass] into a CSS string.
-func (block StyleSheetBlock) ToCss(builder *Builder) {
+func (block StyleSheetBlock) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(block.Selector)
 	builder.Buf.WriteByte('{')
 	writeClassProps(builder, block.Props)
@@ -186,8 +191,8 @@ func (styles *StyleSheet) AddBlock(selector string, props CssProps) {
 }
 
 // Compile a [StyleSheet] into a CSS String.
-func (styles StyleSheet) Compile(builder *Builder) {
+func (styles StyleSheet) Compile(builder *Builder, palette Palette) {
 	for _, element := range styles.Elements {
-		element.ToCss(builder)
+		element.ToCss(builder, palette)
 	}
 }

@@ -29,19 +29,23 @@ func RenderHtmlOpts(
 }
 
 // Render a [StyleSheet] into a CSS string.
-func RenderCss(styles StyleSheet) string {
-	return RenderCssOpts(styles, nil)
+func RenderCss(styles StyleSheet, palette Palette) string {
+	return RenderCssOpts(styles, palette, nil)
 }
 
 // Render a [StyleSheet] into a CSS string specifying particular settings for
 // the internal [Builder]. See the [Builder] struct for the available
 // configuration values.
-func RenderCssOpts(styles StyleSheet, logger *log.Logger) string {
+func RenderCssOpts(
+	styles StyleSheet,
+	palette Palette,
+	logger *log.Logger,
+) string {
 	if logger == nil {
 		logger = log.New(os.Stderr, "", 0)
 	}
 	builder := Builder{strings.Builder{}, false, logger}
-	styles.Compile(&builder)
+	styles.Compile(&builder, palette)
 	return builder.Buf.String()
 }
 

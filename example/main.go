@@ -36,7 +36,7 @@ func main() {
 	)
 
 	fmt.Println("\nGenerated CSS:")
-	fmt.Println(s.RenderCss(styles))
+	fmt.Println(s.RenderCss(styles, s.Palette{}))
 	fmt.Println("\nGenerated HTML:")
 	fmt.Println(s.RenderHtml(node))
 }
