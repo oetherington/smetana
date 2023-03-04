@@ -36,7 +36,7 @@ func (node *DomNode) AssignAttrs(attrs Attrs) {
 	if len(node.Attrs) < 1 {
 		node.Attrs = attrs
 	} else {
-		mergeMaps(node.Attrs, attrs)
+		MergeMaps(node.Attrs, attrs)
 	}
 }
 

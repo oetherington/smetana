@@ -146,8 +146,6 @@ func writeCssValue(builder *Builder, palette Palette, value any) {
 		builder.Buf.WriteString(item)
 	case fmt.Stringer:
 		builder.Buf.WriteString(item.String())
-	case Color:
-		builder.Buf.WriteString(item.String())
 	case int:
 		builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
 	default:

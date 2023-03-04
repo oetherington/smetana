@@ -6,13 +6,26 @@ import (
 )
 
 func main() {
-	styles := s.NewStyleSheet()
-	font := styles.AddFont("OpenSans", "OpenSans.woff2")
-	container := styles.AddAnonClass(s.CssProps{
-		"font-family": font,
-		"background":  s.Rgb(255, 0, 255),
-		"padding":     s.EM(2),
+	smetana := s.NewSmetanaWithPalettes(s.Palettes{
+		"light": {
+			"bg": s.Hex("#eee"),
+			"fg": s.Hex("#222"),
+		},
+		"dark": {
+			"bg": s.Hex("#363636"),
+			"fg": s.Hex("#ddd"),
+		},
 	})
+
+	font := smetana.Styles.AddFont("OpenSans", "/OpenSans.woff2")
+	container := smetana.Styles.AddAnonClass(s.CssProps{
+		"font-family": font,
+		"padding":     s.EM(2),
+		"background":  s.PaletteValue("bg"),
+		"color":       s.PaletteValue("fg"),
+	})
+
+	css := smetana.RenderStyles()
 
 	node := s.Html(
 		s.Head(
@@ -29,14 +42,20 @@ func main() {
 			s.Div(
 				s.Attrs{"aria-label": "hello world"},
 				s.ClassNames("foo", "bar"),
-				s.Span(s.Text("Hello world")),
+				s.Span("Hello world"),
 			),
-			s.Div(s.Text("foobar")),
+			s.Div("foobar"),
 		),
 	)
 
-	fmt.Println("\nGenerated CSS:")
-	fmt.Println(s.RenderCss(styles, s.Palette{}))
+	html := s.RenderHtml(node)
+
+	fmt.Println("\nGenerated CSS (light mode):")
+	fmt.Println(css["light"])
+
+	fmt.Println("\nGenerated CSS (dark mode):")
+	fmt.Println(css["dark"])
+
 	fmt.Println("\nGenerated HTML:")
-	fmt.Println(s.RenderHtml(node))
+	fmt.Println(html)
 }

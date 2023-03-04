@@ -14,7 +14,7 @@ rendering.
  - Built-in support for all HTML5 tags, and easily extensible for web
    components
  - Strongly-typed CSS [units](#adding-units) and [colors](#using-colors)
- - Robust with >95% test coverage
+ - Robust with 100% test coverage
  - Zero dependencies outside the Go standard library
 
 ## Installation
@@ -34,6 +34,50 @@ import (
 ```
 
 Aliasing to `s` (or even `.`) is optional but advised.
+
+### Typical usage
+
+Here is an example of typical usage with separate styles for light and dark
+mode, making use of the `Smetana` context:
+
+```go
+smetana := NewSmetanaWithPalettes(Palettes{
+	"light": {
+		"bg": Hex("#eee"),
+		"fg": Hex("#222"),
+	},
+	"dark": {
+		"bg": Hex("#363636"),
+		"fg": Hex("#ddd"),
+	},
+})
+
+font := smetana.Styles.AddFont("OpenSans", "/OpenSans.woff2")
+container := smetana.Styles.AddAnonClass(CssProps{
+	"font-family": font,
+	"padding":     EM(2),
+	"background":  PaletteValue("bg"),
+	"color":       PaletteValue("fg"),
+})
+
+css := smetana.RenderStyles()
+lightCss = css["light"]
+darkCss = css["dark"]
+
+node := Html(
+	Head(
+		Title("My HTML Document"),
+		LinkHref("stylesheet", "/styles/index.css"),
+	),
+	Body(
+		container,
+		H1("Hello world")
+		P("foobar"),
+	),
+)
+
+html := RenderHtml(node)
+```
 
 ### Building HTML
 
@@ -258,6 +302,30 @@ styles := NewStyleSheet(
 	}),
 )
 ```
+
+#### Using palettes
+
+Stylesheets can be parameterized by using `Palette`s. This can be used, for
+example, to use a single `StyleSheet` to generate separate CSS files for a
+light mode and a dark mode. For instance:
+
+```go
+styles := NewStyleSheet(StylesBlock("body", CssProps{
+	"background": PaletteValue("bg"),
+	"color": PaletteValue("fg"),
+}))
+darkStyles := RenderCss(styles, Palette{
+	"bg": Hex("#000"),
+	"fg": Hex("#fff"),
+})
+lightStyles := RenderCss(styles, Palette{
+	"bg": Hex("#fff"),
+	"fg": Hex("#000"),
+})
+```
+
+The values in a `Palette` are not limited to `Color`s, but can actually be
+any valid CSS value, such as `Unit`s, numbers, or strings.
 
 #### Using colors
 

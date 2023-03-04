@@ -11,8 +11,13 @@
 //
 // Typical usage looks something like this:
 //
-//	styles := NewStyleSheet()
-//	myClass := styles.AddClass({"background": "red", "padding": PX(10)})
+//	smetana := s.NewSmetanaWithPalettes(s.Palettes{
+//		"light": {"color": s.Hex("#222")},
+//		"dark": {"color": s.Hex("#ddd")},
+//	})
+//	myClass := smetana.Styles.AddAnonClass(s.CssProps{
+//		"color": s.PaletteValue("color"),
+//	})
 //	page := Html(
 //		Head(
 //		  Title("My HTML Document"),
@@ -25,9 +30,12 @@
 //			),
 //		),
 //	)
-//	htmlToServe := RenderHtml(page)
-//	cssToServe := RenderCss(styles)
+//	htmlToServe := s.RenderHtml(page)
+//	cssToServe := smetana.RenderStyles()
+
 package smetana
+
+import "log"
 
 // All structural elements of an HTML document are implementers of
 // the [Node] interface for converting to HTML. This is primarily
@@ -52,3 +60,54 @@ type Attrs map[string]string
 
 // Many types of [Node] have children to create a tree.
 type Children []Node
+
+// A map from a palette name to a [Palette]
+type Palettes map[string]Palette
+
+// The [Smetana] struct is an overarching compilation context for tying
+// together different parts of the application.
+type Smetana struct {
+	Palettes Palettes
+	Styles   StyleSheet
+}
+
+// Create a new [Smetana] instance with default values.
+func NewSmetana() Smetana {
+	return Smetana{
+		Palettes: Palettes{},
+		Styles:   NewStyleSheet(),
+	}
+}
+
+// Create a new [Smetana] instance with specific [Palettes].
+func NewSmetanaWithPalettes(palettes Palettes) Smetana {
+	return Smetana{
+		Palettes: palettes,
+		Styles:   NewStyleSheet(),
+	}
+}
+
+// Add a new [Palette] to a [Smetana] context with the given name.
+func (s *Smetana) AddPalette(name string, palette Palette) {
+	s.Palettes[name] = palette
+}
+
+// Render the styles from the [Smetana] context into CSS strings. One CSS
+// stylesheet will be created for each palette added with [AddPalette]. The
+// return value is a map from palette names to rendered CSS strings.
+// See [RenderStylesOpts] for more fine-grained control.
+func (s Smetana) RenderStyles() map[string]string {
+	return s.RenderStylesOpts(nil)
+}
+
+// Render the styles from the [Smetana] context into CSS strings. One CSS
+// stylesheet will be created for each palette added with [AddPalette]. The
+// return value is a map from palette names to rendered CSS strings.
+// See [RenderStyles] for a simple interface with default values.
+func (s Smetana) RenderStylesOpts(logger *log.Logger) map[string]string {
+	result := map[string]string{}
+	for name, palette := range s.Palettes {
+		result[name] = RenderCssOpts(s.Styles, palette, logger)
+	}
+	return result
+}
