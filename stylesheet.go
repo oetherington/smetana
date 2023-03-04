@@ -121,7 +121,7 @@ func writeClassProps(builder *Builder, props CssProps) {
 		case fmt.Stringer:
 			builder.Buf.WriteString(item.String())
 		case Color:
-			builder.Buf.WriteString(item.ToCssColor())
+			builder.Buf.WriteString(item.String())
 		case int:
 			builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
 		default:
