@@ -63,8 +63,8 @@ func TestRgbToHsla(t *testing.T) {
 	assertEqual(t, Hsla(240, 1, 0.5, 1), blue.ToHsla())
 	pink := Rgb(255, 0, 100)
 	assertEqual(t, Hsla(336, 1, 0.5, 1), pink.ToHsla())
-	grey := Rgb(0, 102, 102)
-	assertEqual(t, Hsla(180, 1, 0.2, 1), grey.ToHsla())
+	cyan := Rgb(0, 102, 102)
+	assertEqual(t, Hsla(180, 1, 0.2, 1), cyan.ToHsla())
 }
 
 func TestRgbaToHsla(t *testing.T) {
