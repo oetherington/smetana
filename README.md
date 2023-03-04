@@ -14,7 +14,7 @@ rendering.
  - Built-in support for all HTML5 tags, and easily extensible for web
    components
  - Strongly-typed CSS [units](#adding-units) and [colors](#using-colors)
- - Robust with >95% test coverage
+ - Robust with 100% test coverage
  - Zero dependencies outside the Go standard library
 
 ## Installation
