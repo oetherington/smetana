@@ -205,7 +205,7 @@ compiled into a CSS string with `RenderCss(styles, Palette{})`.
 
 You can then add classes to the stylesheet with
 ```go
-container := styles.addClass("container", CssProps{
+container := styles.AddClass("container", CssProps{
 	"cursor": "pointer",
 })
 ```

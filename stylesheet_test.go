@@ -143,3 +143,15 @@ func TestCanAddBlock(t *testing.T) {
 	css := RenderCss(styles, Palette{})
 	assertEqual(t, "body{background:red;}", css)
 }
+
+func TestCanAddBlockWithPaletteValues(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": PaletteValue("background-color"),
+	})
+	palette := Palette{
+		"background-color": Hex("#FF00FF"),
+	}
+	css := RenderCss(styles, palette)
+	assertEqual(t, "body{background:#FF00FF;}", css)
+}
