@@ -79,6 +79,19 @@ func TestCanAddFontFace(t *testing.T) {
 	assertEqual(t, expected, css)
 }
 
+func TestReportsErrorRenderingInvalidFontFormat(t *testing.T) {
+	styles := NewStyleSheet()
+	font := styles.AddFont("OpenSans", "OpenSans.png")
+	assertEqual(t, "OpenSans", font)
+
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	css := RenderCssOpts(styles, Palette{}, logger)
+	expected := "@font-face{font-family:OpenSans;src:url(OpenSans.png)format('');}"
+	assertEqual(t, expected, css)
+	assertEqual(t, "Invalid font URL: OpenSans.png\n", buf.String())
+}
+
 func TestCanAddClassWithStringProp(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddClass("container", CssProps{
