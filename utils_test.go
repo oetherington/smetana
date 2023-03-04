@@ -36,6 +36,8 @@ func TestMax(t *testing.T) {
 func TestClamp(t *testing.T) {
 	assertEqual(t, 15, clamp(15, 10, 20))
 	assertEqual(t, 10, clamp(5, 10, 20))
+	assertEqual(t, 10, clamp(10, 10, 20))
+	assertEqual(t, 20, clamp(25, 10, 20))
 	assertEqual(t, 20, clamp(20, 10, 20))
 }
 
