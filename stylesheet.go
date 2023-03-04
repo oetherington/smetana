@@ -23,10 +23,26 @@ type CssProps map[string]any
 // The name of a CSS class.
 type ClassName string
 
-// Interface representing an abstract element to be inserted into a CSS.
-// [StyleSheet]
+// A palette for rendering a [Stylesheet] multiple times with different values.
+// This can be used, for instance, to create separate styles for light-mode
+// and dark-mode.
+type Palette map[string]any
+
+// Use [PaletteValue] when creating a [Stylesheet] to mark a value as needing
+// to be fetched from a [Palette].
+//
+//	styles := NewStyleSheet()
+//	styles.AddClass("container", CssProps{
+//		"background": PaletteValue("background-color"),
+//	})
+//	palette := Palette{"background-color", Hex("#f0f")}
+//	css := RenderCss(styles, palette)
+type PaletteValue string
+
+// Interface representing an abstract element to be inserted into a CSS
+// [StyleSheet].
 type StyleSheetElement interface {
-	ToCss(builder *Builder)
+	ToCss(builder *Builder, palette Palette)
 }
 
 // Raw CSS type implementing [StyleSheetElement].
@@ -38,7 +54,7 @@ func StylesCss(css string) StyleSheetCss {
 }
 
 // Convert [StyleSheetCSS] into a CSS string.
-func (css StyleSheetCss) ToCss(builder *Builder) {
+func (css StyleSheetCss) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(string(css))
 }
 
@@ -69,7 +85,7 @@ func fontUrlToFormat(url string) (string, error) {
 }
 
 // Convert a [StyleSheetFontFace] into a CSS string.
-func (font StyleSheetFontFace) ToCss(builder *Builder) {
+func (font StyleSheetFontFace) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString("@font-face{font-family:")
 	builder.Buf.WriteString(font.Family)
 	builder.Buf.WriteString(";src:")
@@ -103,33 +119,41 @@ func StylesBlock(selector string, props CssProps) StyleSheetBlock {
 }
 
 // Convert a [StyleSheetClass] into a CSS string.
-func (block StyleSheetBlock) ToCss(builder *Builder) {
+func (block StyleSheetBlock) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(block.Selector)
 	builder.Buf.WriteByte('{')
-	writeClassProps(builder, block.Props)
+	for key, value := range block.Props {
+		builder.Buf.WriteString(key)
+		builder.Buf.WriteByte(':')
+		writeCssValue(builder, palette, value)
+		builder.Buf.WriteByte(';')
+	}
 	builder.Buf.WriteByte('}')
 }
 
-func writeClassProps(builder *Builder, props CssProps) {
-	for key, value := range props {
-		builder.Buf.WriteString(key)
-		builder.Buf.WriteByte(':')
-
-		switch item := value.(type) {
-		case string:
-			builder.Buf.WriteString(item)
-		case fmt.Stringer:
-			builder.Buf.WriteString(item.String())
-		case Color:
-			builder.Buf.WriteString(item.ToCssColor())
-		case int:
-			builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
-		default:
-			err := fmt.Errorf("Invalid CSS value: %v", item)
+func writeCssValue(builder *Builder, palette Palette, value any) {
+	switch item := value.(type) {
+	case PaletteValue:
+		insertion := palette[string(item)]
+		if insertion == nil {
+			err := fmt.Errorf("Missing palette value: %s", item)
 			builder.Logger.Println(err)
+			builder.Buf.WriteString("inherit")
+		} else {
+			writeCssValue(builder, palette, insertion)
 		}
-
-		builder.Buf.WriteByte(';')
+	case string:
+		builder.Buf.WriteString(item)
+	case fmt.Stringer:
+		builder.Buf.WriteString(item.String())
+	case Color:
+		builder.Buf.WriteString(item.String())
+	case int:
+		builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
+	default:
+		err := fmt.Errorf("Invalid CSS value: %v", item)
+		builder.Logger.Println(err)
+		builder.Buf.WriteString("inherit")
 	}
 }
 
@@ -186,8 +210,8 @@ func (styles *StyleSheet) AddBlock(selector string, props CssProps) {
 }
 
 // Compile a [StyleSheet] into a CSS String.
-func (styles StyleSheet) Compile(builder *Builder) {
+func (styles StyleSheet) Compile(builder *Builder, palette Palette) {
 	for _, element := range styles.Elements {
-		element.ToCss(builder)
+		element.ToCss(builder, palette)
 	}
 }

@@ -201,11 +201,11 @@ func (node CustomNode) ToHtml(b *Builder) {
 Smetana also supports generating CSS stylesheets along with your HTML.
 
 Create a stylesheet with `styles := NewStyleSheet()`. This can later be
-compiled into a CSS string with `RenderCss(styles)`.
+compiled into a CSS string with `RenderCss(styles, Palette{})`.
 
 You can then add classes to the stylesheet with
 ```go
-container := styles.addClass("container", CssProps{
+container := styles.AddClass("container", CssProps{
 	"cursor": "pointer",
 })
 ```

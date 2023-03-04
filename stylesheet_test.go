@@ -3,6 +3,8 @@ package smetana
 import (
 	"errors"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
 )
 
@@ -26,7 +28,7 @@ func TestCanCreateStylesBlock(t *testing.T) {
 
 func TestCanRenderEmptyStyleSheet(t *testing.T) {
 	styles := NewStyleSheet()
-	assertEqual(t, "", RenderCss(styles))
+	assertEqual(t, "", RenderCss(styles, Palette{}))
 }
 
 func TestCanCreateStyleSheetWithInitialElements(t *testing.T) {
@@ -37,7 +39,7 @@ func TestCanCreateStyleSheetWithInitialElements(t *testing.T) {
 		}
 	`
 	styles := NewStyleSheet(StylesCss(css))
-	assertEqual(t, css, RenderCss(styles))
+	assertEqual(t, css, RenderCss(styles, Palette{}))
 }
 
 func TestCanConvertFontNameToExtension(t *testing.T) {
@@ -65,14 +67,14 @@ func TestCanConvertFontNameToExtension(t *testing.T) {
 func TestCanAddARawCssString(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddCss(".hello{background:red;}")
-	assertEqual(t, ".hello{background:red;}", RenderCss(styles))
+	assertEqual(t, ".hello{background:red;}", RenderCss(styles, Palette{}))
 }
 
 func TestCanAddFontFace(t *testing.T) {
 	styles := NewStyleSheet()
 	font := styles.AddFont("OpenSans", "OpenSans.ttf", "OpenSans.woff2")
 	assertEqual(t, "OpenSans", font)
-	css := RenderCss(styles)
+	css := RenderCss(styles, Palette{})
 	expected := "@font-face{font-family:OpenSans;src:url(OpenSans.ttf)format('truetype'),url(OpenSans.woff2)format('woff2');}"
 	assertEqual(t, expected, css)
 }
@@ -83,7 +85,8 @@ func TestCanAddClassWithStringProp(t *testing.T) {
 		"cursor": "pointer",
 	})
 	assertEqual(t, "container", class)
-	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), css)
 }
 
 type CustomProp struct {
@@ -100,7 +103,8 @@ func TestCanAddClassWithCustomStringerProp(t *testing.T) {
 		"padding": CustomProp{4},
 	})
 	assertEqual(t, "container", class)
-	assertEqual(t, fmt.Sprintf(".%s{padding:8;}", class), RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, fmt.Sprintf(".%s{padding:8;}", class), css)
 }
 
 func TestCanAddClassWithIntProp(t *testing.T) {
@@ -109,7 +113,8 @@ func TestCanAddClassWithIntProp(t *testing.T) {
 		"margin": 10,
 	})
 	assertEqual(t, "container", class)
-	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, fmt.Sprintf(".%s{margin:10px;}", class), css)
 }
 
 func TestCanAddClassWithColorProp(t *testing.T) {
@@ -118,7 +123,8 @@ func TestCanAddClassWithColorProp(t *testing.T) {
 		"color": Rgb(255, 0, 0),
 	})
 	assertEqual(t, "container", class)
-	assertEqual(t, fmt.Sprintf(".%s{color:#FF0000;}", class), RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, fmt.Sprintf(".%s{color:#FF0000;}", class), css)
 }
 
 func TestCanAddAnonClass(t *testing.T) {
@@ -127,7 +133,8 @@ func TestCanAddAnonClass(t *testing.T) {
 		"cursor": "pointer",
 	})
 	assertEqual(t, 8, len(class))
-	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, fmt.Sprintf(".%s{cursor:pointer;}", class), css)
 }
 
 func TestCanAddBlock(t *testing.T) {
@@ -135,5 +142,42 @@ func TestCanAddBlock(t *testing.T) {
 	styles.AddBlock("body", CssProps{
 		"background": "red",
 	})
-	assertEqual(t, "body{background:red;}", RenderCss(styles))
+	css := RenderCss(styles, Palette{})
+	assertEqual(t, "body{background:red;}", css)
+}
+
+func TestCanAddBlockWithPaletteValues(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": PaletteValue("background-color"),
+	})
+	palette := Palette{
+		"background-color": Hex("#FF00FF"),
+	}
+	css := RenderCss(styles, palette)
+	assertEqual(t, "body{background:#FF00FF;}", css)
+}
+
+func TestCanAddBlockWithMissingPaletteValues(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": PaletteValue("background-color"),
+	})
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	css := RenderCssOpts(styles, Palette{}, logger)
+	assertEqual(t, "body{background:inherit;}", css)
+	assertEqual(t, "Missing palette value: background-color\n", buf.String())
+}
+
+func TestCanAddBlockWithInvalidCssValue(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": NewStyleSheet(),
+	})
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	css := RenderCssOpts(styles, Palette{}, logger)
+	assertEqual(t, "body{background:inherit;}", css)
+	assertEqual(t, "Invalid CSS value: {[]}\n", buf.String())
 }

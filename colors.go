@@ -7,7 +7,7 @@ import (
 
 // A color value, suitable for use in CSS.
 type Color interface {
-	ToCssColor() string
+	String() string
 	ToHsla() HSLA
 	ToRgba() RGBA
 }
@@ -21,7 +21,7 @@ type RGB struct {
 }
 
 // Convert an [RGB] color to a CSS string.
-func (c RGB) ToCssColor() string {
+func (c RGB) String() string {
 	return fmt.Sprintf("#%02X%02X%02X", c.R, c.G, c.B)
 }
 
@@ -88,7 +88,7 @@ type RGBA struct {
 }
 
 // Convert an [RGBA] color to a CSS string.
-func (c RGBA) ToCssColor() string {
+func (c RGBA) String() string {
 	alpha := float32(c.A) / 255.0
 	return fmt.Sprintf("rgba(%d, %d, %d, %.2f)", c.R, c.G, c.B, alpha)
 }
@@ -158,7 +158,7 @@ type HSL struct {
 }
 
 // Convert an [HSL] color to a CSS string.
-func (c HSL) ToCssColor() string {
+func (c HSL) String() string {
 	s := c.S * 100.0
 	l := c.L * 100.0
 	return fmt.Sprintf("hsl(%d, %.1f%%, %.1f%%)", c.H, s, l)
@@ -190,7 +190,7 @@ type HSLA struct {
 }
 
 // Convert an [HSLA] color to a CSS string.
-func (c HSLA) ToCssColor() string {
+func (c HSLA) String() string {
 	s := c.S * 100.0
 	l := c.L * 100.0
 	return fmt.Sprintf("hsla(%d, %.1f%%, %.1f%%, %.2f)", c.H, s, l, c.A)
