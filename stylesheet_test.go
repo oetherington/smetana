@@ -3,6 +3,8 @@ package smetana
 import (
 	"errors"
 	"fmt"
+	"log"
+	"strings"
 	"testing"
 )
 
@@ -154,4 +156,28 @@ func TestCanAddBlockWithPaletteValues(t *testing.T) {
 	}
 	css := RenderCss(styles, palette)
 	assertEqual(t, "body{background:#FF00FF;}", css)
+}
+
+func TestCanAddBlockWithMissingPaletteValues(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": PaletteValue("background-color"),
+	})
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	css := RenderCssOpts(styles, Palette{}, logger)
+	assertEqual(t, "body{background:inherit;}", css)
+	assertEqual(t, "Missing palette value: background-color\n", buf.String())
+}
+
+func TestCanAddBlockWithInvalidCssValue(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("body", CssProps{
+		"background": NewStyleSheet(),
+	})
+	var buf strings.Builder
+	logger := log.New(&buf, "", 0)
+	css := RenderCssOpts(styles, Palette{}, logger)
+	assertEqual(t, "body{background:inherit;}", css)
+	assertEqual(t, "Invalid CSS value: {[]}\n", buf.String())
 }
