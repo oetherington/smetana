@@ -53,6 +53,11 @@ type Palette map[string]fmt.Stringer
 //	css := RenderCss(styles, palette)
 type PaletteValue string
 
+// Convert a [PaletteValue] into a string.
+func (value PaletteValue) String() string {
+	return string(value)
+}
+
 // Interface representing an abstract element to be inserted into a CSS
 // [StyleSheet].
 type StyleSheetElement interface {
@@ -155,6 +160,40 @@ func (block StyleSheetBlock) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteByte('}')
 }
 
+// A helper that allows you to format text including values from a [Palette].
+// This can be used fo cases such as:
+//
+//	CssProps{"border", PalettePrintf(
+//		"1px solid %s",
+//		PaletteValue("border-color"),
+//	)}
+type PalettePrintfData struct {
+	Format string
+	Args   []any
+}
+
+// Create a [PalettePrintfData].
+func PalettePrintf(
+	format string,
+	args ...any,
+) PalettePrintfData {
+	return PalettePrintfData{format, args}
+}
+
+// Convert a [PalettePrintfData] into a CSS string.
+func (data PalettePrintfData) Render(palette Palette) string {
+	args := make([]any, len(data.Args))
+	for i, value := range data.Args {
+		switch item := value.(type) {
+		case PaletteValue:
+			args[i] = palette[string(item)]
+		default:
+			args[i] = item
+		}
+	}
+	return fmt.Sprintf(data.Format, args...)
+}
+
 // Convert the given CSS value into a string using the given [Palette] if
 // applicable.
 //
@@ -169,6 +208,8 @@ func CssValueToString(palette Palette, value any) (string, error) {
 			return "inherit", fmt.Errorf("Missing palette value: %s", item)
 		}
 		return insertion.String(), nil
+	case PalettePrintfData:
+		return item.Render(palette), nil
 	case string:
 		return item, nil
 	case fmt.Stringer:
