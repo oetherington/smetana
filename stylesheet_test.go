@@ -194,3 +194,20 @@ func TestCanAddBlockWithInvalidCssValue(t *testing.T) {
 	assertEqual(t, "body{background:inherit;}", css)
 	assertEqual(t, "Invalid CSS value: {[]}\n", buf.String())
 }
+
+func TestCanAddPaletteCss(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddPaletteCss(func(palette Palette) string {
+		color, err := CssValueToString(
+			palette,
+			PaletteValue("background-color"),
+		)
+		assertEqual(t, nil, err)
+		return fmt.Sprintf("body{background:%s;}", color)
+	})
+	palette := Palette{
+		"background-color": Hex("#FF00FF"),
+	}
+	css := RenderCss(styles, palette)
+	assertEqual(t, "body{background:#FF00FF;}", css)
+}
