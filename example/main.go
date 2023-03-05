@@ -18,11 +18,13 @@ func main() {
 	})
 
 	font := smetana.Styles.AddFont("OpenSans", "/OpenSans.woff2")
+
+	//nolint:govet
 	container := smetana.Styles.AddAnonClass(s.CssProps{
-		{Key: "font-family", Value: font},
-		{Key: "padding", Value: s.EM(2)},
-		{Key: "background", Value: s.PaletteValue("bg")},
-		{Key: "color", Value: s.PaletteValue("fg")},
+		{"font-family", font},
+		{"padding", s.EM(2)},
+		{"background", s.PaletteValue("bg")},
+		{"color", s.PaletteValue("fg")},
 	})
 
 	css := smetana.RenderStyles()
