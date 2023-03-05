@@ -178,7 +178,8 @@ func WriteCssValue(builder *Builder, palette Palette, value any) {
 }
 
 // [StyleSheet] aggregates the CSS styles for a page and compiles them
-// from the in-code representation into a CSS string for the browser.
+// from the in-code representation into a CSS string for the browser. Note that
+// [StyleSheet] is itself a [StyleSheetElement], so they can be nested.
 type StyleSheet struct {
 	Elements []StyleSheetElement
 }
@@ -230,7 +231,7 @@ func (styles *StyleSheet) AddBlock(selector string, props CssProps) {
 }
 
 // Compile a [StyleSheet] into a CSS String.
-func (styles StyleSheet) Compile(builder *Builder, palette Palette) {
+func (styles StyleSheet) ToCss(builder *Builder, palette Palette) {
 	for _, element := range styles.Elements {
 		element.ToCss(builder, palette)
 	}

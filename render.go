@@ -48,7 +48,7 @@ func RenderCssOpts(
 		logger = log.New(os.Stderr, "", 0)
 	}
 	builder := Builder{strings.Builder{}, false, logger}
-	styles.Compile(&builder, palette)
+	styles.ToCss(&builder, palette)
 	return builder.Buf.String()
 }
 
