@@ -70,7 +70,7 @@ func TestCanRenderStylesFromASmetanaContext(t *testing.T) {
 		},
 	})
 	smetana.Styles.AddBlock("body", CssProps{
-		"background": PaletteValue("bg"),
+		{"background", PaletteValue("bg")},
 	})
 	css := smetana.RenderStyles()
 	assertEqual(t, "body{background:#FFFFFF;}", css["light"])

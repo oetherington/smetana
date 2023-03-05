@@ -21,8 +21,8 @@ func TestCanCreateStylesFontFace(t *testing.T) {
 }
 
 func TestCanCreateStylesBlock(t *testing.T) {
-	block := StylesBlock("body", CssProps{"background": "red"})
-	expected := StyleSheetBlock{"body", CssProps{"background": "red"}}
+	block := StylesBlock("body", CssProps{{"background", "red"}})
+	expected := StyleSheetBlock{"body", CssProps{{"background", "red"}}}
 	assertEqual(t, expected, block)
 }
 
@@ -95,7 +95,7 @@ func TestReportsErrorRenderingInvalidFontFormat(t *testing.T) {
 func TestCanAddClassWithStringProp(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddClass("container", CssProps{
-		"cursor": "pointer",
+		{"cursor", "pointer"},
 	})
 	assertEqual(t, "container", class)
 	css := RenderCss(styles, Palette{})
@@ -113,7 +113,7 @@ func (prop CustomProp) String() string {
 func TestCanAddClassWithCustomStringerProp(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddClass("container", CssProps{
-		"padding": CustomProp{4},
+		{"padding", CustomProp{4}},
 	})
 	assertEqual(t, "container", class)
 	css := RenderCss(styles, Palette{})
@@ -123,7 +123,7 @@ func TestCanAddClassWithCustomStringerProp(t *testing.T) {
 func TestCanAddClassWithIntProp(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddClass("container", CssProps{
-		"margin": 10,
+		{"margin", 10},
 	})
 	assertEqual(t, "container", class)
 	css := RenderCss(styles, Palette{})
@@ -133,7 +133,7 @@ func TestCanAddClassWithIntProp(t *testing.T) {
 func TestCanAddClassWithColorProp(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddClass("container", CssProps{
-		"color": Rgb(255, 0, 0),
+		{"color", Rgb(255, 0, 0)},
 	})
 	assertEqual(t, "container", class)
 	css := RenderCss(styles, Palette{})
@@ -143,7 +143,7 @@ func TestCanAddClassWithColorProp(t *testing.T) {
 func TestCanAddAnonClass(t *testing.T) {
 	styles := NewStyleSheet()
 	class := styles.AddAnonClass(CssProps{
-		"cursor": "pointer",
+		{"cursor", "pointer"},
 	})
 	assertEqual(t, 8, len(class))
 	css := RenderCss(styles, Palette{})
@@ -153,7 +153,7 @@ func TestCanAddAnonClass(t *testing.T) {
 func TestCanAddBlock(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddBlock("body", CssProps{
-		"background": "red",
+		{"background", "red"},
 	})
 	css := RenderCss(styles, Palette{})
 	assertEqual(t, "body{background:red;}", css)
@@ -162,7 +162,7 @@ func TestCanAddBlock(t *testing.T) {
 func TestCanAddBlockWithPaletteValues(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddBlock("body", CssProps{
-		"background": PaletteValue("background-color"),
+		{"background", PaletteValue("background-color")},
 	})
 	palette := Palette{
 		"background-color": Hex("#FF00FF"),
@@ -174,7 +174,7 @@ func TestCanAddBlockWithPaletteValues(t *testing.T) {
 func TestCanAddBlockWithMissingPaletteValues(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddBlock("body", CssProps{
-		"background": PaletteValue("background-color"),
+		{"background", PaletteValue("background-color")},
 	})
 	var buf strings.Builder
 	logger := log.New(&buf, "", 0)
@@ -186,7 +186,7 @@ func TestCanAddBlockWithMissingPaletteValues(t *testing.T) {
 func TestCanAddBlockWithInvalidCssValue(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddBlock("body", CssProps{
-		"background": NewStyleSheet(),
+		{"background", NewStyleSheet()},
 	})
 	var buf strings.Builder
 	logger := log.New(&buf, "", 0)

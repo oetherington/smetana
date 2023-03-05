@@ -2,11 +2,10 @@ test:
 	go test -v -coverprofile=coverage.cov
 
 lint:
-	go vet .
+	go vet ./...
 
 fmt:
-	go fmt .
-	cd example && go fmt .
+	go fmt ./...
 
 check-fmt:
 	if [ "$$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi

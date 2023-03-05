@@ -5,20 +5,34 @@ import (
 	"path/filepath"
 )
 
-// A map from CSS property names to their values. For instance,
+// A single CSS property. For instance,
 //
-//	{"background": "red"}.
+//	CssProp{Key: "cursor", Value: "pointer"}
 //
-// For properties that take size values it is recommended to use a
-// unit helper rather than setting the value with a string. For
-// example, instead of
+// The value may be any type supported by [WriteCssValue].
 //
-//	{"padding": "4px"}
+// For properties that take size values it is recommended to use a unit helper
+// rather than setting the value with a string. For example, instead of
+//
+//	CssProp{"padding", "4px"}
 //
 // you can use
 //
-//	{"padding": PX(4)}
-type CssProps map[string]any
+//	CssProp{"padding", PX(4)}
+type CssProp struct {
+	Key   string
+	Value any
+}
+
+// An array of CSS values of type [CssProp].
+//
+// Note that strict ordering is preserved, which is important in cases such as:
+//
+//	CssProps{
+//		{"margin", "none"},
+//		{"margin-top", PX(5)},
+//	}
+type CssProps []CssProp
 
 // The name of a CSS class.
 type ClassName string
@@ -122,16 +136,24 @@ func StylesBlock(selector string, props CssProps) StyleSheetBlock {
 func (block StyleSheetBlock) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(block.Selector)
 	builder.Buf.WriteByte('{')
-	for key, value := range block.Props {
-		builder.Buf.WriteString(key)
+	for _, prop := range block.Props {
+		builder.Buf.WriteString(prop.Key)
 		builder.Buf.WriteByte(':')
-		writeCssValue(builder, palette, value)
+		WriteCssValue(builder, palette, prop.Value)
 		builder.Buf.WriteByte(';')
 	}
 	builder.Buf.WriteByte('}')
 }
 
-func writeCssValue(builder *Builder, palette Palette, value any) {
+// Write the given value as a string to the [Builder], using the given
+// [Palette] is applicable. This is a low-level function that should rarely
+// be needed to be called directly by library consumers, but it's included in
+// the public API for flexibility.
+//
+// The value argument may be any of the following types: PaletteValue, string,
+// fmt.Stringer (which includes all of the Smetana unit types), or an int
+// (which will be interpreted as a quantity in pixels).
+func WriteCssValue(builder *Builder, palette Palette, value any) {
 	switch item := value.(type) {
 	case PaletteValue:
 		insertion := palette[string(item)]
@@ -140,7 +162,7 @@ func writeCssValue(builder *Builder, palette Palette, value any) {
 			builder.Logger.Println(err)
 			builder.Buf.WriteString("inherit")
 		} else {
-			writeCssValue(builder, palette, insertion)
+			WriteCssValue(builder, palette, insertion)
 		}
 	case string:
 		builder.Buf.WriteString(item)

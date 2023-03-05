@@ -54,10 +54,10 @@ smetana := NewSmetanaWithPalettes(Palettes{
 
 font := smetana.Styles.AddFont("OpenSans", "/OpenSans.woff2")
 container := smetana.Styles.AddAnonClass(CssProps{
-	"font-family": font,
-	"padding":     EM(2),
-	"background":  PaletteValue("bg"),
-	"color":       PaletteValue("fg"),
+	{"font-family", font},
+	{"padding",     EM(2)},
+	{"background",  PaletteValue("bg")},
+	{"color",       PaletteValue("fg")},
 })
 
 css := smetana.RenderStyles()
@@ -250,7 +250,7 @@ compiled into a CSS string with `RenderCss(styles, Palette{})`.
 You can then add classes to the stylesheet with
 ```go
 container := styles.AddClass("container", CssProps{
-	"cursor": "pointer",
+	{"cursor", "pointer"},
 })
 ```
 
@@ -274,14 +274,25 @@ If you don't require class names to be stable between builds then you can
 generate a random class name with `addAnonClass`:
 ```go
 container := styles.addAnonClass(CssProps{
-	"cursor": "pointer",
+	{"cursor", "pointer"},
 })
 ```
 
+`CssProps` is an array of items each of type `CssProp`, which is a struct
+containing 2 fields: `Key` which is the name of the CSS property as a string,
+and `Value` which can be any CSS value (see the documentation and source for
+`WriteCssValue` for details). Note that the style shown in the documentation
+without field names (ie; `{"cursor", "pointer"}` instead of
+`{Key: "cursor", Value: "pointer"}`) will cause a lint error from `go vet`, but
+is often still preferable when writing large amounts of styles. This error can
+be silenced by instead using `go vet -composites=false`, but note that this is
+a compromise and, if possible, should be limited to as little code as possible
+rather than to your entire code base.
+
 To use arbitrary CSS selectors you can instead use `AddBlock`:
 ```go
-styles.AddBlock("body", CssProps{"background": "red"})
-styles.AddBlock(".container > div", CssProps{"display": "flex"})
+styles.AddBlock("body", CssProps{{"background", "red"}})
+styles.AddBlock(".container > div", CssProps{{"display", "flex"}})
 ```
 
 `NewStyleSheet` is also a variadic function which can take an arbitrary
@@ -298,7 +309,7 @@ styles := NewStyleSheet(
 		}
 	`),
 	StylesBlock("div", CssProps{
-		"border-radius": PX(5),
+		{"border-radius", PX(5)},
 	}),
 )
 ```
@@ -311,8 +322,8 @@ light mode and a dark mode. For instance:
 
 ```go
 styles := NewStyleSheet(StylesBlock("body", CssProps{
-	"background": PaletteValue("bg"),
-	"color": PaletteValue("fg"),
+	{"background", PaletteValue("bg")},
+	{"color",      PaletteValue("fg")},
 }))
 darkStyles := RenderCss(styles, Palette{
 	"bg": Hex("#000"),
@@ -333,7 +344,7 @@ Instead of entering CSS color strings by hand, Smetana provides several helper
 types and function to make color handling easier and more programmatic. For
 instance, we can add an RGB background color property with:
 ```go
-CssProps{"background": Rgb(255, 255, 0)}
+CssProps{{"background", Rgb(255, 255, 0)}}
 ```
 which will compile to `background: #FFFF00` in CSS.
 
@@ -356,7 +367,7 @@ lighterRed := Lighten(red, 0.4)
 
 Helpers are also provided to strongly type CSS units. For example,
 ```go
-CssProps{"margin": PX(10)}
+CssProps{{"margin", PX(10)}}
 ```
 will compile to `margin: 10px`;
 
@@ -389,7 +400,7 @@ Smetana can also generate `@font-face` directives to load custom fonts like so:
 styles := NewStyleSheet()
 font := styles.AddFont("OpenSans", "OpenSans.ttf", "OpenSans.woff2")
 class := styles.AddClass(CssProps{
-	"font-family": font,
+	{"font-family", font},
 })
 ```
 
