@@ -171,6 +171,22 @@ func TestCanAddBlockWithPaletteValues(t *testing.T) {
 	assertEqual(t, "body{background:#FF00FF;}", css)
 }
 
+func TestCanAddBlockWithFormattedPaletteValues(t *testing.T) {
+	styles := NewStyleSheet()
+	styles.AddBlock("div", CssProps{
+		{"border", PalettePrintf(
+			"%s solid %s",
+			PX(2),
+			PaletteValue("border-color"),
+		)},
+	})
+	palette := Palette{
+		"border-color": Hex("#FF00FF"),
+	}
+	css := RenderCss(styles, palette)
+	assertEqual(t, "div{border:2px solid #FF00FF;}", css)
+}
+
 func TestCanAddBlockWithMissingPaletteValues(t *testing.T) {
 	styles := NewStyleSheet()
 	styles.AddBlock("body", CssProps{
