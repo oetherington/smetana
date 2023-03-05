@@ -19,10 +19,10 @@ func main() {
 
 	font := smetana.Styles.AddFont("OpenSans", "/OpenSans.woff2")
 	container := smetana.Styles.AddAnonClass(s.CssProps{
-		"font-family": font,
-		"padding":     s.EM(2),
-		"background":  s.PaletteValue("bg"),
-		"color":       s.PaletteValue("fg"),
+		{Key: "font-family", Value: font},
+		{Key: "padding", Value: s.EM(2)},
+		{Key: "background", Value: s.PaletteValue("bg")},
+		{Key: "color", Value: s.PaletteValue("fg")},
 	})
 
 	css := smetana.RenderStyles()
