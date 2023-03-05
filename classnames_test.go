@@ -18,11 +18,12 @@ func TestClassNamesCanbeEmpty(t *testing.T) {
 }
 
 func TestClassesNamesCanBeConditional(t *testing.T) {
+	one := 1
 	result := ClassNames(Classes{
 		"a": true,
 		"b": false,
 		"c": 1 == 2,
-		"d": 1 == 1,
+		"d": 1 == one,
 	})
 	assertOneOf(t, []ClassName{"a d", "d a"}, result)
 }

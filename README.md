@@ -287,7 +287,8 @@ without field names (ie; `{"cursor", "pointer"}` instead of
 is often still preferable when writing large amounts of styles. This error can
 be silenced by instead using `go vet -composites=false`, but note that this is
 a compromise and, if possible, should be limited to as little code as possible
-rather than to your entire code base.
+rather than to your entire code base. Alternatively, you can use
+`golangci-lint` with `// nolint` comments (see `examples/main.go`).
 
 To use arbitrary CSS selectors you can instead use `AddBlock`:
 ```go
