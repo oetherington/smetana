@@ -9,7 +9,7 @@ import (
 //
 //	CssProp{Key: "cursor", Value: "pointer"}
 //
-// The value may be any type supported by [WriteCssValue].
+// The value may be any type supported by [CssValueToString].
 //
 // For properties that take size values it is recommended to use a unit helper
 // rather than setting the value with a string. For example, instead of
@@ -40,7 +40,7 @@ type ClassName string
 // A palette for rendering a [Stylesheet] multiple times with different values.
 // This can be used, for instance, to create separate styles for light-mode
 // and dark-mode.
-type Palette map[string]any
+type Palette map[string]fmt.Stringer
 
 // Use [PaletteValue] when creating a [Stylesheet] to mark a value as needing
 // to be fetched from a [Palette].
@@ -70,6 +70,16 @@ func StylesCss(css string) StyleSheetCss {
 // Convert [StyleSheetCSS] into a CSS string.
 func (css StyleSheetCss) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteString(string(css))
+}
+
+// Instead of using a raw CSS string with [StyleSheetCss] you can instead use
+// [StyleSheetPaletteCss] to provide a function that takes a palette which is
+// used to build a CSS string.
+type StyleSheetPaletteCss func(palette Palette) string
+
+// Convert [StyleSheetPaletteCSS] into a CSS string.
+func (css StyleSheetPaletteCss) ToCss(builder *Builder, palette Palette) {
+	builder.Buf.WriteString(css(palette))
 }
 
 // @font-face type implementing [StyleSheetElement].
@@ -145,36 +155,43 @@ func (block StyleSheetBlock) ToCss(builder *Builder, palette Palette) {
 	builder.Buf.WriteByte('}')
 }
 
+// Convert the given CSS value into a string using the given [Palette] if
+// applicable.
+//
+// The value argument may be any of the following types: PaletteValue, string,
+// fmt.Stringer (which includes all of the Smetana unit types), or an int
+// (which will be interpreted as a quantity in pixels).
+func CssValueToString(palette Palette, value any) (string, error) {
+	switch item := value.(type) {
+	case PaletteValue:
+		insertion := palette[string(item)]
+		if insertion == nil {
+			return "inherit", fmt.Errorf("Missing palette value: %s", item)
+		}
+		return insertion.String(), nil
+	case string:
+		return item, nil
+	case fmt.Stringer:
+		return item.String(), nil
+	case int:
+		return fmt.Sprintf("%dpx", item), nil
+	default:
+		return "inherit", fmt.Errorf("Invalid CSS value: %v", item)
+	}
+}
+
 // Write the given value as a string to the [Builder], using the given
 // [Palette] is applicable. This is a low-level function that should rarely
 // be needed to be called directly by library consumers, but it's included in
 // the public API for flexibility.
 //
-// The value argument may be any of the following types: PaletteValue, string,
-// fmt.Stringer (which includes all of the Smetana unit types), or an int
-// (which will be interpreted as a quantity in pixels).
+// The value argument may be any type supported by [CssValueToString].
 func WriteCssValue(builder *Builder, palette Palette, value any) {
-	switch item := value.(type) {
-	case PaletteValue:
-		insertion := palette[string(item)]
-		if insertion == nil {
-			err := fmt.Errorf("Missing palette value: %s", item)
-			builder.Logger.Println(err)
-			builder.Buf.WriteString("inherit")
-		} else {
-			WriteCssValue(builder, palette, insertion)
-		}
-	case string:
-		builder.Buf.WriteString(item)
-	case fmt.Stringer:
-		builder.Buf.WriteString(item.String())
-	case int:
-		builder.Buf.WriteString(fmt.Sprintf("%dpx", item))
-	default:
-		err := fmt.Errorf("Invalid CSS value: %v", item)
+	str, err := CssValueToString(palette, value)
+	if err != nil {
 		builder.Logger.Println(err)
-		builder.Buf.WriteString("inherit")
 	}
+	builder.Buf.WriteString(str)
 }
 
 // [StyleSheet] aggregates the CSS styles for a page and compiles them
@@ -189,8 +206,13 @@ func NewStyleSheet(elements ...StyleSheetElement) StyleSheet {
 	return StyleSheet{elements}
 }
 
-// Add a raw CSS string to the [StyleSheet]
+// Add a raw CSS string to the [StyleSheet].
 func (styles *StyleSheet) AddCss(css StyleSheetCss) {
+	styles.Elements = append(styles.Elements, css)
+}
+
+// Add [StyleSheetPaletteCss] generator function to the [StyleSheet].
+func (styles *StyleSheet) AddPaletteCss(css StyleSheetPaletteCss) {
 	styles.Elements = append(styles.Elements, css)
 }
 
