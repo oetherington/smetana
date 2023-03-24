@@ -24,6 +24,12 @@ func TestRenderDomNodeWithChildren(t *testing.T) {
 	assertEqual(t, "<div>bar</div>", result)
 }
 
+func TestRenderDomNodeWithChildrenArray(t *testing.T) {
+	node := NewDomNode("div", []any{[]Node{Text("bar")}})
+	result := RenderHtmlOpts(node, true, nil)
+	assertEqual(t, "<div>bar</div>", result)
+}
+
 func TestRenderDomNodeWithSingleAttribute(t *testing.T) {
 	node := NewDomNode("div", []any{Attr{"foo", "bar"}})
 	result := RenderHtmlOpts(node, true, nil)
